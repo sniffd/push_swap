@@ -2,18 +2,11 @@
 
 void get_median(int *ar, int end)
 {
-	int first;
-	int last;
-	int mid;
-
-	first = ar[0];
-	last = ar[end];
-	mid = ar[end / 2];
-	if (ar[mid] < ar[first])
-		ft_swap(ar, ar + end / 2);
-	if (ar[last] < ar[first])
+	if (ar[end / 2] < ar[0])
+		ft_swap(ar, ar + (end / 2));
+	if (ar[end] < ar[0])
 		ft_swap(ar, ar + end);
-	if (ar[mid] > ar[last])
+	if (ar[end / 2] > ar[end])
 		ft_swap(ar + end, ar + end / 2);
 }
 
@@ -22,9 +15,11 @@ int	partition(int *ar, int end)
 	int pivot;
 	int i;
 	int j;
+	int	index;
 
 	get_median(ar, end);
-	pivot = ar[end / 2];
+	index = end / 2;
+	pivot = ar[index];
 	i = -1;
 	j = end + 1;
 	while (1)
@@ -36,8 +31,12 @@ int	partition(int *ar, int end)
 		while (ar[j] > pivot && j > 0)
 			j = j - 1;
 		if (i >= j)
-			return (j);
+			return (index);
 		ft_swap(ar + i, ar + j);
+		if (i == index)
+			index = j++;
+		else if (j == index)
+			index = i--;
 	}
 }
 
