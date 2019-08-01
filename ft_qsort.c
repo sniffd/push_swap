@@ -1,6 +1,6 @@
 #include "push_swap.h"
 
-int	get_median(const int *ar, int end)
+void get_median(int *ar, int end)
 {
 	int first;
 	int last;
@@ -9,12 +9,12 @@ int	get_median(const int *ar, int end)
 	first = ar[0];
 	last = ar[end];
 	mid = ar[end / 2];
-	if ((first >= last && last >= mid) || (first <= last && last <= mid))
-		return (end);
-	else if ((last >= mid && mid >= first) || (last <= mid && mid <= first))
-		return (end / 2);
-	else
-		return (0);
+	if (ar[mid] < ar[first])
+		ft_swap(ar, ar + end / 2);
+	if (ar[last] < ar[first])
+		ft_swap(ar, ar + end);
+	if (ar[mid] > ar[last])
+		ft_swap(ar + end, ar + end / 2);
 }
 
 int	partition(int *ar, int end)
@@ -23,13 +23,14 @@ int	partition(int *ar, int end)
 	int i;
 	int j;
 
-	pivot = get_median(ar, end);
+	get_median(ar, end);
+	pivot = ar[end / 2];
 	i = -1;
 	j = end + 1;
 	while (1)
 	{
 		i = i + 1;
-		while (ar[i] <= pivot && i < end)
+		while (ar[i] < pivot && i < end)
 			i = i + 1;
 		j = j - 1;
 		while (ar[j] > pivot && j > 0)
@@ -44,7 +45,7 @@ void	ft_qsort(int *ar, int end)
 {
 	int p;
 
-	if (end > 1)
+	if (end > 0)
 	{
 		p = partition(ar, end);
 		ft_qsort(ar, p - 1);
