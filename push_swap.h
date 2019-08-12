@@ -11,4 +11,5 @@ typedef struct	s_stack
 }				t_stack;
 
 void	ft_qsort(int *ar, int end);
+int		atoi_push_swap(const char *str, int *f);
 #endif //PUSH_SWAP_PUSH_SWAP_H

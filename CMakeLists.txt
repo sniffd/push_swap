@@ -87,5 +87,5 @@ add_executable(push_swap
         libft/libft.h
         ft_qsort.c
         main.c
-        push_swap.h push_swap.c s.c p.c r.c rr.c)
+        push_swap.h push_swap.c s.c p.c r.c rr.c atoi_push_swap.c)
 target_link_libraries(push_swap ftprintf "-L../libft")
