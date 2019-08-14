@@ -50,6 +50,7 @@ int		validation(int argc, char **argv)
 			return (0);
 		i++;
 	}
+	ft_qsort(ar, argc - 1);
 	i = 0;
 	while (i < argc - 2)
 	{
@@ -61,11 +62,45 @@ int		validation(int argc, char **argv)
 	return (1);
 }
 
+void	create_stack(t_stack **first, t_stack **last, int *ar, int argc)
+{
+	int	i;
+
+	i = 1;
+	while (i < argc)
+	{
+		add_last(first, last, create_elem(ar[i - 1]));
+		i++;
+	}
+}
+
 int		main(int argc, char **argv)
 {
+	int	*ar;
+	int	i;
+	t_stack *first;
+	t_stack *last;
+
+	i = 1;
+	first = NULL;
+	last = NULL;
 	if (validation(argc, argv))
 	{
-
+		ar = (int *)ft_memalloc(sizeof(int) * (argc - 1));
+		while (i < argc)
+		{
+			ar[i - 1] = ft_atoi(argv[i]);
+			i++;
+		}
+		ft_qsort(ar, argc - 1);
+		create_stack(&first, &last, ar, argc);
+//		push_swap();
+//		i = 0;
+//		while (i < argc - 1)
+//		{
+//			ft_printf("%i ", ar[i]);
+//			i++;
+//		}
 	}
 	else
 		ft_printf("Error\n");
