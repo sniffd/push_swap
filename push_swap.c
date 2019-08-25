@@ -15,23 +15,44 @@ int		find_steps(t_stack *first, int size, int n)
 	return (-1);
 }
 
-void	push_swap(t_stack *first, t_stack *last, int argc)
+void	push_swap(t_stack *first, t_stack *last, int *ar, int argc)
 {
 	int counter_a;
 	int counter_b;
 	int steps;
+	int	i;
+	t_stack	*b_first;
+	t_stack	*b_last;
 
+	b_first = NULL;
+	b_last = NULL;
 	counter_b = 0;
 	counter_a = argc;
-	steps = find_steps(first, counter_a, );
-	if ()
+	i = 0;
+	while (i < argc - 1)
 	{
-
+		steps = find_steps(first, counter_a, ar[i]);
+		if (steps == 1 && i + 1 < argc - 1 && first->data == ar[i + 1])
+			sa(&first);
+		else if (steps == -1)
+		{
+			while (first->data != ar[i])
+				rra(&first, &last);
+		}
+		else
+		{
+			while (steps > 0)
+			{
+				ra(&first, &last);
+				steps--;
+			}
+		}
+		pb(&first, &b_first);
+		counter_b++;
+		i++;
 	}
-	while ()
-	{
-
-	}
+	while (counter_b--)
+		pa(&first, &b_first);
 }
 
 int		validation(int argc, char **argv)
@@ -92,9 +113,9 @@ int		main(int argc, char **argv)
 			ar[i - 1] = ft_atoi(argv[i]);
 			i++;
 		}
-		ft_qsort(ar, argc - 1);
 		create_stack(&first, &last, ar, argc);
-//		push_swap();
+		ft_qsort(ar, argc - 1);
+		push_swap(first, last, ar, argc);
 //		i = 0;
 //		while (i < argc - 1)
 //		{
