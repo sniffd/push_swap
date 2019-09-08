@@ -18,12 +18,24 @@ void	pb(t_stack **a_start, t_stack **b_start)
 {
 	if (*a_start)
 	{
-		(*b_start)->prev->next = *a_start;
-		(*a_start)->prev->next = (*a_start)->next;
-		(*a_start)->next = *b_start;
-		(*a_start)->prev->next->prev = (*a_start)->prev;
-		(*a_start)->prev = (*b_start)->prev;
-		(*b_start)->prev = *a_start;
-		*b_start = (*b_start)->prev;
+		if (*b_start)
+		{
+			(*b_start)->prev->next = *a_start;
+			(*a_start)->prev->next = (*a_start)->next;
+			(*a_start)->next = *b_start;
+			(*a_start)->prev->next->prev = (*a_start)->prev;
+			(*a_start)->prev = (*b_start)->prev;
+			(*b_start)->prev = *a_start;
+			*b_start = (*b_start)->prev;
+		}
+		else
+		{
+			*b_start = *a_start;
+			*a_start = (*a_start)->next;
+			(*b_start)->prev->next = *a_start;
+			(*a_start)->prev = (*b_start)->prev;
+			(*b_start)->prev = *b_start;
+			(*b_start)->next = *b_start;
+		}
 	}
 }
