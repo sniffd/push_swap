@@ -62,7 +62,7 @@ int		validation(int argc, char **argv)
 	int *ar;
 
 	i = 1;
-	ar = ft_memalloc(sizeof(int) * (argc - 1));
+	ar = (int *)ft_memalloc(sizeof(int) * (argc - 1));
 	while (i < argc)
 	{
 		f = 0;
@@ -71,7 +71,7 @@ int		validation(int argc, char **argv)
 			return (0);
 		i++;
 	}
-	ft_qsort(ar, argc - 1);
+	ft_qsort(ar, argc - 2);
 	i = 0;
 	while (i < argc - 2)
 	{
@@ -113,8 +113,10 @@ int		main(int argc, char **argv)
 			ar[i - 1] = ft_atoi(argv[i]);
 			i++;
 		}
+//		ft_printf("%i\n%i\n%i\n%i\n", ar[0], ar[1], ar[2], ar[3]);
 		create_stack(&first, &last, ar, argc);
-		ft_qsort(ar, argc - 1);
+		ft_qsort(ar, argc - 2);
+//		ft_printf("%i\n%i\n%i\n%i\n", ar[0], ar[1], ar[2], ar[3]);
 		push_swap(first, last, ar, argc);
 //		i = 0;
 //		while (i < argc - 1)
