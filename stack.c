@@ -17,10 +17,10 @@ void	add_last(t_stack **first, t_stack **last, t_stack *e)
 	}
 	else
 	{
-		(*last)->prev = e;
-		e->next = (*last);
-		e->prev = (*first);
-		(*first)->next = e;
+		e->next = (*first);
+		(*last)->next = e;
+		e->prev = (*last);
+		(*first)->prev = e;
 		(*last) = e;
 	}
 }
