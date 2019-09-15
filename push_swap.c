@@ -15,11 +15,27 @@ int		find_steps(t_stack *first, int size, int n)
 	return (-1);
 }
 
+int		is_contain(t_stack *first, int size, int n)
+{
+	int	s;
+
+	s = 0;
+	while (s != size)
+	{
+		if (n == first->data)
+			return (1);
+		first = first->next;
+		s++;
+	}
+	return (0);
+}
+
 void	push_swap(t_stack *first, t_stack *last, int *ar, int argc)
 {
 	int counter_a;
 	int counter_b;
 	int steps;
+	int b_steps;
 	int	i;
 	t_stack	*b_first;
 	t_stack	*b_last;
@@ -29,8 +45,19 @@ void	push_swap(t_stack *first, t_stack *last, int *ar, int argc)
 	counter_b = 0;
 	counter_a = argc;
 	i = 0;
+	while (counter_a > 3)
+	{
+		pb(&first, &b_first);
+		counter_a--;
+		counter_b++;
+	}
 	while (i < argc - 1)
 	{
+		if (i + 1 < argc - 1)
+		{
+			if (is_contain(b_first, counter_b, ar[i + 1]))
+				b_steps = find_steps();
+		}
 		steps = find_steps(first, counter_a, ar[i]);
 		if (steps == 1 && i + 1 < argc - 1 && first->data == ar[i + 1])
 			sa(&first);
