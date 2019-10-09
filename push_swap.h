@@ -6,6 +6,12 @@
 typedef struct	s_stack
 {
 	int				data;
+	int				ra;
+	int				rb;
+	int				rr;
+	int				rra;
+	int				rrb;
+	int				rrr;
 	struct s_stack	*next;
 	struct s_stack	*prev;
 }				t_stack;
