@@ -30,6 +30,16 @@ int		is_contain(t_stack *first, int size, int n)
 	return (0);
 }
 
+int		find_pos(const int *ar, int n)
+{
+	int	i;
+
+	i = 0;
+	while (ar[i] != n)
+		i++;
+	return (i);
+}
+
 void	push_swap(t_stack *first, t_stack *last, int *ar, int argc)
 {
 	int counter_a;
@@ -37,33 +47,44 @@ void	push_swap(t_stack *first, t_stack *last, int *ar, int argc)
 	int steps;
 	int b_steps;
 	int	i;
+	int	j;
 	t_stack	*b_first;
 	t_stack	*b_last;
 
 	b_first = NULL;
 	b_last = NULL;
 	counter_b = 0;
-	counter_a = argc;
+	counter_a = argc - 1;
 	i = 0;
+	j = 0;
 	while (counter_a > 3)
 	{
-		pb(&first, &b_first);
-		counter_a--;
-		counter_b++;
-	}
-	while (i < argc - 1)
-	{
-		if (i + 1 < argc - 1)
+		if (first->data != ar[0] && first->data != ar[argc - 2])
 		{
-			if (is_contain(b_first, counter_b, ar[i + 1]))
-				b_steps = find_steps();
+			pb(&first, &b_first);
+			counter_a--;
+			counter_b++;
+//			TODO изменить пуш чтобы пушилось по частям от меньшей к большей (обратная пирамида)
 		}
-		steps = find_steps(first, counter_a, ar[i]);
-		if (steps == 1 && i + 1 < argc - 1 && first->data == ar[i + 1])
-			sa(&first);
-		else if (steps == -1)
+		else
+			ra(&first, &last);
+	}
+	while (counter_b)//TODO изменить алгос, чтобы считало варианты для каждого элемента
+	{
+		i = find_pos(ar, b_first->data);
+		j = 1;
+		while (i + j < argc - 1)
 		{
-			while (first->data != ar[i])
+			if (is_contain(first, counter_a, ar[i + j]))
+				break;
+			j++;
+		}
+		steps = find_steps(first, counter_a, ar[i + j]);
+//		if (steps == 1 && i + 1 < argc - 1 && first->data == ar[i + 1])
+//			sa(&first);
+		if (steps == -1)
+		{
+			while (first->data != ar[i + j])
 				rra(&first, &last);
 		}
 		else
@@ -74,12 +95,12 @@ void	push_swap(t_stack *first, t_stack *last, int *ar, int argc)
 				steps--;
 			}
 		}
-		pb(&first, &b_first);
-		counter_b++;
+//		pb(&first, &b_first);
+		pa(&first, &b_first);
+		counter_a++;
+		counter_b--;
 		i++;
 	}
-	while (counter_b--)
-		pa(&first, &b_first);
 }
 
 int		validation(int argc, char **argv)
