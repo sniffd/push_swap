@@ -6,6 +6,7 @@
 typedef struct	s_stack
 {
 	int				data;
+	int				part;
 	int				ra;
 	int				rb;
 	int				rr;

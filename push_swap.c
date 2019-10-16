@@ -48,15 +48,51 @@ void	push_swap(t_stack *first, t_stack *last, int *ar, int argc)
 	int b_steps;
 	int	i;
 	int	j;
+	int	first_index;
+	int	second_index;
+	int	f_counter;
+	int	s_counter;
+	int	t_counter;
 	t_stack	*b_first;
 	t_stack	*b_last;
+	t_stack	*current;
 
 	b_first = NULL;
 	b_last = NULL;
+	current = first;
+	f_counter = 0;
+	s_counter = 0;
+	t_counter = 0;
 	counter_b = 0;
 	counter_a = argc - 1;
 	i = 0;
 	j = 0;
+	first_index = (argc - 2) / 3;
+	second_index = first_index * 2 + 1;
+	while (1)
+	{
+		while (ar[i] != current->data)
+			i++;
+		if (i <= first_index)
+		{
+			current->part = 1;
+			f_counter++;
+		}
+		else if (i < second_index)
+		{
+			current->part = 2;
+			s_counter++;
+		}
+		else
+		{
+			current->part = 3;
+			t_counter++;
+		}
+		i = 0;
+		if (current == last)
+			break ;
+		current = current->next;
+	}
 	while (counter_a > 3)
 	{
 		if (first->data != ar[0] && first->data != ar[argc - 2])
@@ -80,8 +116,6 @@ void	push_swap(t_stack *first, t_stack *last, int *ar, int argc)
 			j++;
 		}
 		steps = find_steps(first, counter_a, ar[i + j]);
-//		if (steps == 1 && i + 1 < argc - 1 && first->data == ar[i + 1])
-//			sa(&first);
 		if (steps == -1)
 		{
 			while (first->data != ar[i + j])
@@ -95,7 +129,6 @@ void	push_swap(t_stack *first, t_stack *last, int *ar, int argc)
 				steps--;
 			}
 		}
-//		pb(&first, &b_first);
 		pa(&first, &b_first);
 		counter_a++;
 		counter_b--;
