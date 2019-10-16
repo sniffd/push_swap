@@ -63,6 +63,137 @@ int		find_elem(t_stack *first, int part)
 	return (f <= -b ? f : b);
 }
 
+void	set_op(t_stack *a_first, t_stack *b_first, int size_a, int size_b, int argc, int *ar)
+{
+	int		part;
+	int		i;
+	int		j;
+	t_stack	*current;
+	t_stack	*tmp;
+
+	current = b_first;
+	part = current->part;
+	while (part == current->part)
+	{
+		current->ra = 0;
+		current->rb = 0;
+		current->rr = 0;
+		current->rra = 0;
+		current->rrb = 0;
+		current->rrr = 0;
+		tmp = current;
+		if ((current->rrb = find_steps(b_first, size_b, current->data)) < 0)
+		{
+			current->rrb = 0;
+			while (tmp != b_first)
+			{
+				(current->rb)++;
+				tmp = tmp->next;
+			}
+		}
+		i = find_pos(ar, current->data);
+		j = 1;
+		while (i + j < argc - 1)
+		{
+			if (is_contain(a_first, size_a, ar[i + j]))
+				break;
+			j++;
+		}
+		tmp = a_first;
+		if ((current->rra = find_steps(a_first, size_a, ar[i + j])) == -1)
+		{
+			current->rra = 0;
+			while (tmp->data != ar[i + j])
+			{
+				(current->ra)++;
+				tmp = tmp->next;
+			}
+		}
+		while (current->ra > 0 && current->rb > 0)
+		{
+			(current->rr)++;
+			(current->ra)--;
+			(current->rb)--;
+		}
+		while (current->rra > 0 && current->rrb > 0)
+		{
+			(current->rrr)++;
+			(current->rra)--;
+			(current->rrb)--;
+		}
+		current->sum = current->ra + current->rb + current->rr + current->rra + current->rrb + current->rrr;
+		current = current->next;
+		if (size_b == 1)
+			break;
+	}
+}
+
+t_stack		*get_steps(t_stack *first)
+{
+	int	part;
+//	int	steps;
+//	int	res_steps;
+	int	min;
+	t_stack *current;
+	t_stack *res;
+
+	current = first;
+	res = current;
+	part = current->part;
+//	steps = 0;
+//	res_steps = 0;
+	min = current->sum;
+	while (current->part == part)
+	{
+		if (current->sum < min)
+		{
+			min = current->sum;
+			res = current;
+		}
+		current = current->next;
+		if (first == first->next)
+			break;
+	}
+	return (res);
+}
+
+void	execute(t_stack **a_first, t_stack **a_last, t_stack **b_first, t_stack **b_last)
+{
+	t_stack	*ops;
+
+	ops = get_steps(*b_first);
+	while (ops->rr > 0)
+	{
+		rr(a_first, a_last, b_first, b_last);
+		(ops->rr)--;
+	}
+	while (ops->ra > 0)
+	{
+		ra(a_first, a_last);
+		(ops->ra)--;
+	}
+	while (ops->rb > 0)
+	{
+		rb(b_first, b_last);
+		(ops->rb)--;
+	}
+	while (ops->rrr > 0)
+	{
+		rrr(a_first, a_last, b_first, b_last);
+		(ops->rrr)--;
+	}
+	while (ops->rra > 0)
+	{
+		rra(a_first, a_last);
+		(ops->rra)--;
+	}
+	while (ops->rrb > 0)
+	{
+		rrb(b_first, b_last);
+		(ops->rrb)--;
+	}
+}
+
 void	push_swap(t_stack *first, t_stack *last, int *ar, int argc)
 {
 	int counter_a;
@@ -208,32 +339,35 @@ void	push_swap(t_stack *first, t_stack *last, int *ar, int argc)
 		}
 	while (counter_b)//TODO изменить алгос, чтобы считало варианты для каждого элемента
 	{
-		i = find_pos(ar, b_first->data);
-		j = 1;
-		while (i + j < argc - 1)
-		{
-			if (is_contain(first, counter_a, ar[i + j]))
-				break;
-			j++;
-		}
-		steps = find_steps(first, counter_a, ar[i + j]);
-		if (steps == -1)
-		{
-			while (first->data != ar[i + j])
-				rra(&first, &last);
-		}
-		else
-		{
-			while (steps > 0)
-			{
-				ra(&first, &last);
-				steps--;
-			}
-		}
+		set_op(first, b_first, counter_a, counter_b, argc, ar);
+//		i = find_pos(ar, b_first->data);
+//		j = 1;
+//		while (i + j < argc - 1)
+//		{
+//			if (is_contain(first, counter_a, ar[i + j]))
+//				break;
+//			j++;
+//		}
+//		steps = find_steps(first, counter_a, ar[i + j]);
+//		if (steps == -1)
+//		{
+//			while (first->data != ar[i + j])
+//				rra(&first, &last);
+//		}
+//		else
+//		{
+//			while (steps > 0)
+//			{
+//				ra(&first, &last);
+//				steps--;
+//			}
+//		}
+		b_last = b_first->prev;
+		execute(&first, &last, &b_first, &b_last);
 		pa(&first, &b_first);
 		counter_a++;
 		counter_b--;
-		i++;
+//		i++;
 	}
 }
 

@@ -13,6 +13,7 @@ typedef struct	s_stack
 	int				rra;
 	int				rrb;
 	int				rrr;
+	int				sum;
 	struct s_stack	*next;
 	struct s_stack	*prev;
 }				t_stack;
