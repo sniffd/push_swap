@@ -40,6 +40,29 @@ int		find_pos(const int *ar, int n)
 	return (i);
 }
 
+int		find_elem(t_stack *first, int part)
+{
+	t_stack	*tmp;
+	int		f;
+	int		b;
+
+	tmp = first;
+	f = 0;
+	b = 0;
+	while (tmp->part != part)
+	{
+		tmp = tmp->next;
+		f++;
+	}
+	tmp = first;
+	while (tmp->part != part)
+	{
+		tmp = tmp->next;
+		b--;
+	}
+	return (f <= -b ? f : b);
+}
+
 void	push_swap(t_stack *first, t_stack *last, int *ar, int argc)
 {
 	int counter_a;
@@ -73,7 +96,7 @@ void	push_swap(t_stack *first, t_stack *last, int *ar, int argc)
 	{
 		while (ar[i] != current->data)
 			i++;
-		if (i <= first_index)
+		if (i <= first_index && i != 0)
 		{
 			current->part = 1;
 			f_counter++;
@@ -83,7 +106,7 @@ void	push_swap(t_stack *first, t_stack *last, int *ar, int argc)
 			current->part = 2;
 			s_counter++;
 		}
-		else
+		else if (i < (argc - 2))
 		{
 			current->part = 3;
 			t_counter++;
@@ -93,18 +116,96 @@ void	push_swap(t_stack *first, t_stack *last, int *ar, int argc)
 			break ;
 		current = current->next;
 	}
-	while (counter_a > 3)
-	{
-		if (first->data != ar[0] && first->data != ar[argc - 2])
+		while (f_counter)
 		{
-			pb(&first, &b_first);
+			if (first->part == 1)
+			{
+				pb(&first, &b_first);
+				f_counter--;
+			}
+			else if ((steps = find_elem(first, 1)) > 0)
+			{
+				while (steps)
+				{
+					ra(&first, &last);
+					steps--;
+				}
+				pb(&first, &b_first);
+				f_counter--;
+			}
+			else
+			{
+				while (steps)
+				{
+					rra(&first, &last);
+					steps++;
+				}
+				pb(&first, &b_first);
+				f_counter--;
+			}
 			counter_a--;
 			counter_b++;
-//			TODO изменить пуш чтобы пушилось по частям от меньшей к большей (обратная пирамида)
 		}
-		else
-			ra(&first, &last);
-	}
+		while (s_counter)
+		{
+			if (first->part == 2)
+			{
+				pb(&first, &b_first);
+				s_counter--;
+			}
+			else if ((steps = find_elem(first, 2)) > 0)
+			{
+				while (steps)
+				{
+					ra(&first, &last);
+					steps--;
+				}
+				pb(&first, &b_first);
+				s_counter--;
+			}
+			else
+			{
+				while (steps)
+				{
+					rra(&first, &last);
+					steps++;
+				}
+				pb(&first, &b_first);
+				s_counter--;
+			}
+			counter_a--;
+			counter_b++;
+		}
+		while (t_counter)
+		{
+			if (first->part == 3)
+			{
+				pb(&first, &b_first);
+				t_counter--;
+			}
+			else if ((steps = find_elem(first, 3)) > 0)
+			{
+				while (steps)
+				{
+					ra(&first, &last);
+					steps--;
+				}
+				pb(&first, &b_first);
+				t_counter--;
+			}
+			else
+			{
+				while (steps)
+				{
+					rra(&first, &last);
+					steps++;
+				}
+				pb(&first, &b_first);
+				t_counter--;
+			}
+			counter_a--;
+			counter_b++;
+		}
 	while (counter_b)//TODO изменить алгос, чтобы считало варианты для каждого элемента
 	{
 		i = find_pos(ar, b_first->data);
@@ -194,10 +295,10 @@ int		main(int argc, char **argv)
 			ar[i - 1] = ft_atoi(argv[i]);
 			i++;
 		}
-//		ft_printf("%i\n%i\n%i\n%i\n", ar[0], ar[1], ar[2], ar[3]);
+//		ft_printf("%i\n%i\n%i\n%i\n%i\n", ar[0], ar[1], ar[2], ar[3], ar[4]);
 		create_stack(&first, &last, ar, argc);
 		ft_qsort(ar, argc - 2);
-//		ft_printf("%i\n%i\n%i\n%i\n", ar[0], ar[1], ar[2], ar[3]);
+//		ft_printf("%i\n%i\n%i\n%i\n%i\n", ar[0], ar[1], ar[2], ar[3], ar[4]);
 		push_swap(first, last, ar, argc);
 //		i = 0;
 //		while (i < argc - 1)
