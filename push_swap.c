@@ -5,7 +5,7 @@ int		find_steps(t_stack *first, int size, int n)
 	int	s;
 
 	s = 0;
-	while (s != size / 2)
+	while (s <= size / 2)
 	{
 		if (n == first->data)
 			return (s);
@@ -63,6 +63,21 @@ int		find_elem(t_stack *first, int part)
 	return (f <= -b ? f : b);
 }
 
+void	print_stack(t_stack *f, t_stack *l)
+{
+	t_stack *tmp;
+
+	tmp = f;
+	while (1)
+	{
+		ft_printf("%i\n", tmp->data);
+		if (tmp == l)
+			break;
+		tmp = tmp->next;
+	}
+	ft_printf("\n");
+}
+
 void	set_op(t_stack *a_first, t_stack *b_first, int size_a, int size_b, int argc, int *ar)
 {
 	int		part;
@@ -73,57 +88,74 @@ void	set_op(t_stack *a_first, t_stack *b_first, int size_a, int size_b, int argc
 
 	current = b_first;
 	part = current->part;
-	while (part == current->part)
+	while (1)
 	{
+//		ft_printf("stack a\n");
+//		print_stack(a_first, a_first->prev);
+//		ft_printf("stack b\n");
+//		print_stack(b_first, b_first->prev);
+
 		current->ra = 0;
 		current->rb = 0;
 		current->rr = 0;
 		current->rra = 0;
 		current->rrb = 0;
 		current->rrr = 0;
+		current->sum = 0;
 		tmp = current;
-		if ((current->rrb = find_steps(b_first, size_b, current->data)) < 0)
+		if (part == current->part)
 		{
-			current->rrb = 0;
-			while (tmp != b_first)
+			if ((current->rb = find_steps(b_first, size_b, current->data)) < 0)
 			{
-				(current->rb)++;
-				tmp = tmp->next;
+				current->rb = 0;
+				while (tmp != b_first)
+				{
+					(current->rrb)++;
+					tmp = tmp->prev;
+				}
 			}
-		}
-		i = find_pos(ar, current->data);
-		j = 1;
-		while (i + j < argc - 1)
-		{
-			if (is_contain(a_first, size_a, ar[i + j]))
-				break;
-			j++;
-		}
-		tmp = a_first;
-		if ((current->rra = find_steps(a_first, size_a, ar[i + j])) == -1)
-		{
-			current->rra = 0;
-			while (tmp->data != ar[i + j])
+			i = find_pos(ar, current->data);
+			j = 1;
+			while (1)
 			{
-				(current->ra)++;
-				tmp = tmp->next;
+				if (i + j == argc - 1)
+				{
+					i = 0;
+					j = 0;
+					break ;
+				}
+				if (is_contain(a_first, size_a, ar[i + j]))
+					break;
+				j++;
 			}
+			tmp = a_first;
+			if ((current->ra = find_steps(a_first, size_a, ar[i + j])) == -1)
+			{
+				current->ra = 0;
+				while (tmp->data != ar[i + j])
+				{
+					(current->rra)++;
+					tmp = tmp->prev;
+				}
+			}
+			while (current->ra > 0 && current->rb > 0)
+			{
+				(current->rr)++;
+				(current->ra)--;
+				(current->rb)--;
+			}
+			while (current->rra > 0 && current->rrb > 0)
+			{
+				(current->rrr)++;
+				(current->rra)--;
+				(current->rrb)--;
+			}
+			current->sum =
+					current->ra + current->rb + current->rr + current->rra +
+					current->rrb + current->rrr;
 		}
-		while (current->ra > 0 && current->rb > 0)
-		{
-			(current->rr)++;
-			(current->ra)--;
-			(current->rb)--;
-		}
-		while (current->rra > 0 && current->rrb > 0)
-		{
-			(current->rrr)++;
-			(current->rra)--;
-			(current->rrb)--;
-		}
-		current->sum = current->ra + current->rb + current->rr + current->rra + current->rrb + current->rrr;
 		current = current->next;
-		if (size_b == 1)
+		if (current == b_first)
 			break;
 	}
 }
@@ -143,15 +175,15 @@ t_stack		*get_steps(t_stack *first)
 //	steps = 0;
 //	res_steps = 0;
 	min = current->sum;
-	while (current->part == part)
+	while (1)
 	{
-		if (current->sum < min)
+		if (current->part == part && current->sum < min)
 		{
 			min = current->sum;
 			res = current;
 		}
 		current = current->next;
-		if (first == first->next)
+		if (current == first->prev)
 			break;
 	}
 	return (res);
@@ -169,12 +201,12 @@ void	execute(t_stack **a_first, t_stack **a_last, t_stack **b_first, t_stack **b
 	}
 	while (ops->ra > 0)
 	{
-		ra(a_first, a_last);
+		ra(a_first, a_last, 1);
 		(ops->ra)--;
 	}
 	while (ops->rb > 0)
 	{
-		rb(b_first, b_last);
+		rb(b_first, b_last, 1);
 		(ops->rb)--;
 	}
 	while (ops->rrr > 0)
@@ -184,12 +216,12 @@ void	execute(t_stack **a_first, t_stack **a_last, t_stack **b_first, t_stack **b
 	}
 	while (ops->rra > 0)
 	{
-		rra(a_first, a_last);
+		rra(a_first, a_last, 1);
 		(ops->rra)--;
 	}
 	while (ops->rrb > 0)
 	{
-		rrb(b_first, b_last);
+		rrb(b_first, b_last, 1);
 		(ops->rrb)--;
 	}
 }
@@ -232,12 +264,12 @@ void	push_swap(t_stack *first, t_stack *last, int *ar, int argc)
 			current->part = 1;
 			f_counter++;
 		}
-		else if (i < second_index)
+		else if (i < second_index && i != 0)
 		{
 			current->part = 2;
 			s_counter++;
 		}
-		else if (i < (argc - 2))
+		else if (i < (argc - 2) && i != 0)
 		{
 			current->part = 3;
 			t_counter++;
@@ -258,7 +290,7 @@ void	push_swap(t_stack *first, t_stack *last, int *ar, int argc)
 			{
 				while (steps)
 				{
-					ra(&first, &last);
+					ra(&first, &last, 1);
 					steps--;
 				}
 				pb(&first, &b_first);
@@ -268,7 +300,7 @@ void	push_swap(t_stack *first, t_stack *last, int *ar, int argc)
 			{
 				while (steps)
 				{
-					rra(&first, &last);
+					rra(&first, &last, 1);
 					steps++;
 				}
 				pb(&first, &b_first);
@@ -288,7 +320,7 @@ void	push_swap(t_stack *first, t_stack *last, int *ar, int argc)
 			{
 				while (steps)
 				{
-					ra(&first, &last);
+					ra(&first, &last, 1);
 					steps--;
 				}
 				pb(&first, &b_first);
@@ -298,7 +330,7 @@ void	push_swap(t_stack *first, t_stack *last, int *ar, int argc)
 			{
 				while (steps)
 				{
-					rra(&first, &last);
+					rra(&first, &last, 1);
 					steps++;
 				}
 				pb(&first, &b_first);
@@ -318,7 +350,7 @@ void	push_swap(t_stack *first, t_stack *last, int *ar, int argc)
 			{
 				while (steps)
 				{
-					ra(&first, &last);
+					ra(&first, &last, 1);
 					steps--;
 				}
 				pb(&first, &b_first);
@@ -328,7 +360,7 @@ void	push_swap(t_stack *first, t_stack *last, int *ar, int argc)
 			{
 				while (steps)
 				{
-					rra(&first, &last);
+					rra(&first, &last, 1);
 					steps++;
 				}
 				pb(&first, &b_first);
