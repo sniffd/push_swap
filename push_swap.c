@@ -94,6 +94,7 @@ void	set_op(t_stack *a_first, t_stack *b_first, int size_a, int size_b, int argc
 //		print_stack(a_first, a_first->prev);
 //		ft_printf("stack b\n");
 //		print_stack(b_first, b_first->prev);
+//8 7 3 4 1 9 2 0 6 5
 
 		current->ra = 0;
 		current->rb = 0;
@@ -400,6 +401,19 @@ void	push_swap(t_stack *first, t_stack *last, int *ar, int argc)
 		counter_a++;
 		counter_b--;
 //		i++;
+	}
+	if ((steps = find_steps(first, counter_a, ar[0])) != 0)
+	{
+		if (steps < 0)
+		{
+			while (first->data != ar[0])
+				rra(&first, &last, 1);
+		}
+		else
+		{
+			while (first->data != ar[0])
+				ra(&first, &last, 1);
+		}
 	}
 }
 
