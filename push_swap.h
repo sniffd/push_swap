@@ -18,6 +18,16 @@ typedef struct	s_stack
 	struct s_stack	*prev;
 }				t_stack;
 
+typedef	struct	s_counters
+{
+	int	f_counter;
+	int	s_counter;
+	int	t_counter;
+	int counter_a;
+	int counter_b;
+	int tmp;
+}				t_counters;
+
 void	ft_qsort(int *ar, int end);
 int		atoi_push_swap(const char *str, int *f);
 void	add_last(t_stack **first, t_stack **last, t_stack *e);

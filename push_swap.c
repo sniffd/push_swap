@@ -78,7 +78,7 @@ void	print_stack(t_stack *f, t_stack *l)
 	ft_printf("\n");
 }
 
-void	set_op(t_stack *a_first, t_stack *b_first, int size_a, int size_b, int argc, int *ar)
+void	set_op(t_stack *a_first, t_stack *b_first, int size_a, int size_b, int argc, int *ar, t_counters *cntrs)
 {
 	int		part;
 	int		i;
@@ -87,14 +87,18 @@ void	set_op(t_stack *a_first, t_stack *b_first, int size_a, int size_b, int argc
 	t_stack	*tmp;
 
 	current = b_first;
-	part = current->part;
+	if (cntrs->t_counter > 0)
+		part = 3;
+	else if (cntrs->s_counter > 0)
+		part = 2;
+	else if (cntrs->f_counter > 0)
+		part = 1;
 	while (1)
 	{
 //		ft_printf("stack a\n");
 //		print_stack(a_first, a_first->prev);
 //		ft_printf("stack b\n");
 //		print_stack(b_first, b_first->prev);
-//8 7 3 4 1 9 2 0 6 5
 
 		current->ra = 0;
 		current->rb = 0;
@@ -190,7 +194,7 @@ t_stack		*get_steps(t_stack *first)
 	return (res);
 }
 
-void	execute(t_stack **a_first, t_stack **a_last, t_stack **b_first, t_stack **b_last)
+void	execute(t_stack **a_first, t_stack **a_last, t_stack **b_first, t_stack **b_last, t_counters *cntrs)
 {
 	t_stack	*ops;
 
@@ -225,33 +229,52 @@ void	execute(t_stack **a_first, t_stack **a_last, t_stack **b_first, t_stack **b
 		rrb(b_first, b_last, 1);
 		(ops->rrb)--;
 	}
+	if (ops->part == 3)
+		(cntrs->t_counter)--;
+	else if (ops->part == 2)
+		(cntrs->s_counter)--;
+	else if (ops->part == 1)
+		(cntrs->f_counter)--;
+}
+
+int		is_sort(t_stack *first, t_stack *last)
+{
+	t_stack	*current;
+
+	current = first;
+	while (current != last)
+	{
+		if (current->next->data < current->data)
+			return (0);
+		current = current->next;
+	}
+	return (1);
 }
 
 void	push_swap(t_stack *first, t_stack *last, int *ar, int argc)
 {
-	int counter_a;
-	int counter_b;
 	int steps;
 	int b_steps;
 	int	i;
 	int	j;
 	int	first_index;
 	int	second_index;
-	int	f_counter;
-	int	s_counter;
-	int	t_counter;
-	t_stack	*b_first;
-	t_stack	*b_last;
-	t_stack	*current;
+	t_stack		*b_first;
+	t_stack		*b_last;
+	t_stack		*current;
+	t_counters	*cntrs;
 
+	if (is_sort(first, last))
+		return ;
+	cntrs = ft_memalloc(sizeof(t_counters));
 	b_first = NULL;
 	b_last = NULL;
 	current = first;
-	f_counter = 0;
-	s_counter = 0;
-	t_counter = 0;
-	counter_b = 0;
-	counter_a = argc - 1;
+	cntrs->f_counter = 0;
+	cntrs->s_counter = 0;
+	cntrs->t_counter = 0;
+	cntrs->counter_b = 0;
+	cntrs->counter_a = argc - 1;
 	i = 0;
 	j = 0;
 	first_index = (argc - 2) / 3;
@@ -263,146 +286,127 @@ void	push_swap(t_stack *first, t_stack *last, int *ar, int argc)
 		if (i <= first_index && i != 0)
 		{
 			current->part = 1;
-			f_counter++;
+			(cntrs->f_counter)++;
 		}
 		else if (i < second_index && i != 0)
 		{
 			current->part = 2;
-			s_counter++;
+			(cntrs->s_counter)++;
 		}
 		else if (i < (argc - 2) && i != 0)
 		{
 			current->part = 3;
-			t_counter++;
+			(cntrs->t_counter)++;
 		}
 		i = 0;
 		if (current == last)
 			break ;
 		current = current->next;
 	}
-		while (f_counter)
-		{
-			if (first->part == 1)
-			{
-				pb(&first, &b_first);
-				f_counter--;
-			}
-			else if ((steps = find_elem(first, 1)) > 0)
-			{
-				while (steps)
-				{
-					ra(&first, &last, 1);
-					steps--;
-				}
-				pb(&first, &b_first);
-				f_counter--;
-			}
-			else
-			{
-				while (steps)
-				{
-					rra(&first, &last, 1);
-					steps++;
-				}
-				pb(&first, &b_first);
-				f_counter--;
-			}
-			counter_a--;
-			counter_b++;
-		}
-		while (s_counter)
-		{
-			if (first->part == 2)
-			{
-				pb(&first, &b_first);
-				s_counter--;
-			}
-			else if ((steps = find_elem(first, 2)) > 0)
-			{
-				while (steps)
-				{
-					ra(&first, &last, 1);
-					steps--;
-				}
-				pb(&first, &b_first);
-				s_counter--;
-			}
-			else
-			{
-				while (steps)
-				{
-					rra(&first, &last, 1);
-					steps++;
-				}
-				pb(&first, &b_first);
-				s_counter--;
-			}
-			counter_a--;
-			counter_b++;
-		}
-		while (t_counter)
-		{
-			if (first->part == 3)
-			{
-				pb(&first, &b_first);
-				t_counter--;
-			}
-			else if ((steps = find_elem(first, 3)) > 0)
-			{
-				while (steps)
-				{
-					ra(&first, &last, 1);
-					steps--;
-				}
-				pb(&first, &b_first);
-				t_counter--;
-			}
-			else
-			{
-				while (steps)
-				{
-					rra(&first, &last, 1);
-					steps++;
-				}
-				pb(&first, &b_first);
-				t_counter--;
-			}
-			counter_a--;
-			counter_b++;
-		}
-	while (counter_b)//TODO изменить алгос, чтобы считало варианты для каждого элемента
+	cntrs->tmp = cntrs->f_counter;
+	while (cntrs->tmp)
 	{
-		set_op(first, b_first, counter_a, counter_b, argc, ar);
-//		i = find_pos(ar, b_first->data);
-//		j = 1;
-//		while (i + j < argc - 1)
-//		{
-//			if (is_contain(first, counter_a, ar[i + j]))
-//				break;
-//			j++;
-//		}
-//		steps = find_steps(first, counter_a, ar[i + j]);
-//		if (steps == -1)
-//		{
-//			while (first->data != ar[i + j])
-//				rra(&first, &last);
-//		}
-//		else
-//		{
-//			while (steps > 0)
-//			{
-//				ra(&first, &last);
-//				steps--;
-//			}
-//		}
+		if (first->part == 1)
+		{
+			pb(&first, &b_first);
+			(cntrs->tmp)--;
+		}
+		else if ((steps = find_elem(first, 1)) > 0)
+		{
+			while (steps)
+			{
+				ra(&first, &last, 1);
+				steps--;
+			}
+			pb(&first, &b_first);
+			(cntrs->tmp)--;
+		}
+		else
+		{
+			while (steps)
+			{
+				rra(&first, &last, 1);
+				steps++;
+			}
+			pb(&first, &b_first);
+			(cntrs->tmp)--;
+		}
+		(cntrs->counter_a)--;
+		(cntrs->counter_b)++;
+	}
+	cntrs->tmp = cntrs->s_counter;
+	while (cntrs->tmp)
+	{
+		if (first->part == 2)
+		{
+			pb(&first, &b_first);
+			(cntrs->tmp)--;
+		}
+		else if ((steps = find_elem(first, 2)) > 0)
+		{
+			while (steps)
+			{
+				ra(&first, &last, 1);
+				steps--;
+			}
+			pb(&first, &b_first);
+			(cntrs->tmp)--;
+		}
+		else
+		{
+			while (steps)
+			{
+				rra(&first, &last, 1);
+				steps++;
+			}
+			pb(&first, &b_first);
+			(cntrs->tmp)--;
+		}
+		(cntrs->counter_a)--;
+		(cntrs->counter_b)++;
+	}
+	cntrs->tmp = cntrs->t_counter;
+	while (cntrs->tmp)
+	{
+		if (first->part == 3)
+		{
+			pb(&first, &b_first);
+			(cntrs->tmp)--;
+		}
+		else if ((steps = find_elem(first, 3)) > 0)
+		{
+			while (steps)
+			{
+				ra(&first, &last, 1);
+				steps--;
+			}
+			pb(&first, &b_first);
+			(cntrs->tmp)--;
+		}
+		else
+		{
+			while (steps)
+			{
+				rra(&first, &last, 1);
+				steps++;
+			}
+			pb(&first, &b_first);
+			(cntrs->tmp)--;
+		}
+		(cntrs->counter_a)--;
+		(cntrs->counter_b)++;
+	}
+	while (cntrs->counter_b)
+	{
+		set_op(first, b_first, cntrs->counter_a, cntrs->counter_b, argc, ar, cntrs);
 		b_last = b_first->prev;
-		execute(&first, &last, &b_first, &b_last);
+		execute(&first, &last, &b_first, &b_last, cntrs);
 		pa(&first, &b_first);
-		counter_a++;
-		counter_b--;
+		(cntrs->counter_a)++;
+		(cntrs->counter_b)--;
 //		i++;
 	}
-	if ((steps = find_steps(first, counter_a, ar[0])) != 0)
+	if ((steps = find_steps(first, cntrs->counter_a, ar[0])) != 0)
 	{
 		if (steps < 0)
 		{
@@ -415,6 +419,10 @@ void	push_swap(t_stack *first, t_stack *last, int *ar, int argc)
 				ra(&first, &last, 1);
 		}
 	}
+	ft_printf("stack a\n");
+	print_stack(first, first->prev);
+	ft_printf("stack b\n");
+	print_stack(b_first, b_first->prev);
 }
 
 int		validation(int argc, char **argv)
