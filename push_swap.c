@@ -320,10 +320,23 @@ void	mark_up(t_pointers *pntrs, t_counters *cntrs, const int *ar)
 	}
 }
 
+void	final_rotation(t_pointers *pntrs, t_counters *cntrs, const int *ar)
+{
+	int	steps;
+
+	if ((steps = find_steps(pntrs->a_first, cntrs->counter_a, ar[0])) != 0)
+	{
+		if (steps < 0)
+			while (pntrs->a_first->data != ar[0])
+				rra(pntrs, 1);
+		else
+			while (pntrs->a_first->data != ar[0])
+				ra(pntrs, 1);
+	}
+}
+
 void	push_swap(t_pointers *pntrs, int *ar, int argc)
 {
-	int steps;
-	int	i;
 	t_counters	*cntrs;
 
 	if (is_sort(pntrs->a_first, pntrs->a_last))
@@ -341,19 +354,7 @@ void	push_swap(t_pointers *pntrs, int *ar, int argc)
 		(cntrs->counter_a)++;
 		(cntrs->counter_b)--;
 	}
-	if ((steps = find_steps(pntrs->a_first, cntrs->counter_a, ar[0])) != 0)
-	{
-		if (steps < 0)
-		{
-			while (pntrs->a_first->data != ar[0])
-				rra(pntrs, 1);
-		}
-		else
-		{
-			while (pntrs->a_first->data != ar[0])
-				ra(pntrs, 1);
-		}
-	}
+	final_rotation(pntrs, cntrs, ar);
 //	ft_printf("stack a\n");
 //	print_stack(first, first->prev);
 //	ft_printf("stack b\n");
