@@ -34,6 +34,7 @@ typedef	struct	s_pointers
 	t_stack	*a_last;
 	t_stack	*b_first;
 	t_stack	*b_last;
+	t_stack	*current;
 }				t_pointers;
 
 void	ft_qsort(int *ar, int end);

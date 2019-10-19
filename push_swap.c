@@ -89,18 +89,34 @@ void	reset(t_stack *current)
 	current->sum = 0;
 }
 
-void	set_b(t_stack *current, t_pointers *pntrs, t_counters *cntrs)
+void	set_b(t_pointers *pntrs, t_counters *cntrs)
 {
 	t_stack	*tmp;
 
-	tmp = current;
-	if ((current->rb = find_steps(pntrs->b_first, cntrs->counter_b, current->data)) < 0)
+	tmp = pntrs->current;
+	if ((pntrs->current->rb = find_steps(pntrs->b_first, cntrs->counter_b, pntrs->current->data)) < 0)
 	{
-		current->rb = 0;
+		pntrs->current->rb = 0;
 		while (tmp != pntrs->b_first)
 		{
-			(current->rrb)++;
+			(pntrs->current->rrb)++;
 			tmp = tmp->next;
+		}
+	}
+}
+
+void	set_a(t_pointers *pntrs, t_counters *cntrs, int e)
+{
+	t_stack	*tmp;
+
+	tmp = pntrs->a_first;
+	if ((pntrs->current->ra = find_steps(pntrs->a_first, cntrs->counter_a, e)) == -1)
+	{
+		pntrs->current->ra = 0;
+		while (tmp->data != e)
+		{
+			(pntrs->current->rra)++;
+			tmp = tmp->prev;
 		}
 	}
 }
@@ -124,15 +140,40 @@ void	optimization(t_stack *current)
 			current->rrb + current->rrr;
 }
 
+void	set_sum(t_counters *cntrs, t_pointers *pntrs, int *ar, int part)
+{
+	int	i;
+	int	j;
+
+	if (part == pntrs->current->part)
+	{
+		set_b(pntrs, cntrs);
+		i = find_pos(ar, pntrs->current->data);
+		j = 1;
+		while (1)
+		{
+			if (i + j == cntrs->counter_a + cntrs->counter_b)
+			{
+				i = 0;
+				j = 0;
+				break ;
+			}
+			if (is_contain(pntrs->a_first, cntrs->counter_a, ar[i + j]))
+				break;
+			j++;
+		}
+		set_a(pntrs, cntrs, ar[i + j]);
+		optimization(pntrs->current);
+	}
+}
+
 void	set_op(t_pointers *pntrs, int argc, int *ar, t_counters *cntrs)
 {
 	int		part;
 	int		i;
 	int		j;
-	t_stack	*current;
-	t_stack	*tmp;
 
-	current = pntrs->b_first;
+	pntrs->current = pntrs->b_first;
 	part = 0;
 	if (cntrs->t_counter > 0)
 		part = 3;
@@ -146,38 +187,10 @@ void	set_op(t_pointers *pntrs, int argc, int *ar, t_counters *cntrs)
 //		print_stack(a_first, a_first->prev);
 //		ft_printf("stack b\n");
 //		print_stack(b_first, b_first->prev);
-		reset(current);
-		if (part == current->part)
-		{
-			set_b(current, pntrs, cntrs);
-			i = find_pos(ar, current->data);
-			j = 1;
-			while (1)
-			{
-				if (i + j == argc - 1)
-				{
-					i = 0;
-					j = 0;
-					break ;
-				}
-				if (is_contain(pntrs->a_first, cntrs->counter_a, ar[i + j]))
-					break;
-				j++;
-			}
-			tmp = pntrs->a_first;
-			if ((current->ra = find_steps(pntrs->a_first, cntrs->counter_a, ar[i + j])) == -1)
-			{
-				current->ra = 0;
-				while (tmp->data != ar[i + j])
-				{
-					(current->rra)++;
-					tmp = tmp->prev;
-				}
-			}
-			optimization(current);
-		}
-		current = current->next;
-		if (current == pntrs->b_first)
+		reset(pntrs->current);
+		set_sum(cntrs, pntrs, ar, part);
+		pntrs->current = pntrs->current->next;
+		if (pntrs->current == pntrs->b_first)
 			break;
 	}
 }
