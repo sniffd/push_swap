@@ -254,6 +254,45 @@ int		is_sort(t_stack *first, t_stack *last)
 	return (1);
 }
 
+void	push_part(t_pointers *pntrs, t_counters *cntrs, int steps, int part)
+{
+	if (part == 3)
+		cntrs->tmp = cntrs->t_counter;
+	else if (part == 2)
+		cntrs->tmp = cntrs->s_counter;
+	else
+		cntrs->tmp = cntrs->f_counter;
+	while ((cntrs->tmp)--)
+	{
+		if (pntrs->a_first->part == part)
+			pb(pntrs);
+		else if ((steps = find_elem(pntrs->a_first, part)) > 0)
+		{
+			while (steps--)
+				ra(pntrs, 1);
+			pb(pntrs);
+		}
+		else
+		{
+			while (steps++)
+				rra(pntrs, 1);
+			pb(pntrs);
+		}
+		(cntrs->counter_a)--;
+		(cntrs->counter_b)++;
+	}
+}
+
+void	presort(t_pointers *pntrs, t_counters *cntrs)
+{
+	int	steps;
+
+	steps = 0;
+	push_part(pntrs, cntrs, steps, 3);
+	push_part(pntrs, cntrs, steps, 2);
+	push_part(pntrs, cntrs, steps, 1);
+}
+
 void	push_swap(t_pointers *pntrs, int *ar, int argc)
 {
 	int steps;
@@ -299,99 +338,7 @@ void	push_swap(t_pointers *pntrs, int *ar, int argc)
 			break ;
 		current = current->next;
 	}
-	cntrs->tmp = cntrs->f_counter;
-	while (cntrs->tmp)
-	{
-		if (pntrs->a_first->part == 1)
-		{
-			pb(pntrs);
-			(cntrs->tmp)--;
-		}
-		else if ((steps = find_elem(pntrs->a_first, 1)) > 0)
-		{
-			while (steps)
-			{
-				ra(pntrs, 1);
-				steps--;
-			}
-			pb(pntrs);
-			(cntrs->tmp)--;
-		}
-		else
-		{
-			while (steps)
-			{
-				rra(pntrs, 1);
-				steps++;
-			}
-			pb(pntrs);
-			(cntrs->tmp)--;
-		}
-		(cntrs->counter_a)--;
-		(cntrs->counter_b)++;
-	}
-	cntrs->tmp = cntrs->s_counter;
-	while (cntrs->tmp)
-	{
-		if (pntrs->a_first->part == 2)
-		{
-			pb(pntrs);
-			(cntrs->tmp)--;
-		}
-		else if ((steps = find_elem(pntrs->a_first, 2)) > 0)
-		{
-			while (steps)
-			{
-				ra(pntrs, 1);
-				steps--;
-			}
-			pb(pntrs);
-			(cntrs->tmp)--;
-		}
-		else
-		{
-			while (steps)
-			{
-				rra(pntrs, 1);
-				steps++;
-			}
-			pb(pntrs);
-			(cntrs->tmp)--;
-		}
-		(cntrs->counter_a)--;
-		(cntrs->counter_b)++;
-	}
-	cntrs->tmp = cntrs->t_counter;
-	while (cntrs->tmp)
-	{
-		if (pntrs->a_first->part == 3)
-		{
-			pb(pntrs);
-			(cntrs->tmp)--;
-		}
-		else if ((steps = find_elem(pntrs->a_first, 3)) > 0)
-		{
-			while (steps)
-			{
-				ra(pntrs, 1);
-				steps--;
-			}
-			pb(pntrs);
-			(cntrs->tmp)--;
-		}
-		else
-		{
-			while (steps)
-			{
-				rra(pntrs, 1);
-				steps++;
-			}
-			pb(pntrs);
-			(cntrs->tmp)--;
-		}
-		(cntrs->counter_a)--;
-		(cntrs->counter_b)++;
-	}
+	presort(pntrs, cntrs);
 	while (cntrs->counter_b)
 	{
 		set_op(pntrs, argc, ar, cntrs);
