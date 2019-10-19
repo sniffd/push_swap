@@ -102,6 +102,25 @@ void	set_b(t_stack *current, t_stack *tmp, t_pointers *pntrs, t_counters *cntrs)
 	}
 }
 
+void	optimization(t_stack *current)
+{
+	while (current->ra > 0 && current->rb > 0)
+	{
+		(current->rr)++;
+		(current->ra)--;
+		(current->rb)--;
+	}
+	while (current->rra > 0 && current->rrb > 0)
+	{
+		(current->rrr)++;
+		(current->rra)--;
+		(current->rrb)--;
+	}
+	current->sum =
+			current->ra + current->rb + current->rr + current->rra +
+			current->rrb + current->rrr;
+}
+
 void	set_op(t_pointers *pntrs, int argc, int *ar, t_counters *cntrs)
 {
 	int		part;
@@ -125,10 +144,9 @@ void	set_op(t_pointers *pntrs, int argc, int *ar, t_counters *cntrs)
 //		ft_printf("stack b\n");
 //		print_stack(b_first, b_first->prev);
 		reset(current);
-		tmp = current;
 		if (part == current->part)
 		{
-			set_b(current, tmp, pntrs, cntrs);
+			set_b(current, current, pntrs, cntrs);
 			i = find_pos(ar, current->data);
 			j = 1;
 			while (1)
@@ -153,21 +171,7 @@ void	set_op(t_pointers *pntrs, int argc, int *ar, t_counters *cntrs)
 					tmp = tmp->prev;
 				}
 			}
-			while (current->ra > 0 && current->rb > 0)
-			{
-				(current->rr)++;
-				(current->ra)--;
-				(current->rb)--;
-			}
-			while (current->rra > 0 && current->rrb > 0)
-			{
-				(current->rrr)++;
-				(current->rra)--;
-				(current->rrb)--;
-			}
-			current->sum =
-					current->ra + current->rb + current->rr + current->rra +
-					current->rrb + current->rrr;
+			optimization(current);
 		}
 		current = current->next;
 		if (current == pntrs->b_first)
