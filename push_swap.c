@@ -89,8 +89,11 @@ void	reset(t_stack *current)
 	current->sum = 0;
 }
 
-void	set_b(t_stack *current, t_stack *tmp, t_pointers *pntrs, t_counters *cntrs)
+void	set_b(t_stack *current, t_pointers *pntrs, t_counters *cntrs)
 {
+	t_stack	*tmp;
+
+	tmp = current;
 	if ((current->rb = find_steps(pntrs->b_first, cntrs->counter_b, current->data)) < 0)
 	{
 		current->rb = 0;
@@ -146,7 +149,7 @@ void	set_op(t_pointers *pntrs, int argc, int *ar, t_counters *cntrs)
 		reset(current);
 		if (part == current->part)
 		{
-			set_b(current, current, pntrs, cntrs);
+			set_b(current, pntrs, cntrs);
 			i = find_pos(ar, current->data);
 			j = 1;
 			while (1)
