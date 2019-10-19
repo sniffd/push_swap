@@ -1,24 +1,24 @@
 #include "push_swap.h"
 
-void	ra(t_stack **a_start, t_stack **a_finish, int flag)
+void	ra(t_pointers *pntrs, int flag)
 {
-	*a_start = (*a_start)->next;
-	*a_finish = (*a_finish)->next;
+	pntrs->a_first = pntrs->a_first->next;
+	pntrs->a_last = pntrs->a_last->next;
 	if (flag)
 		ft_printf("ra\n");
 }
 
-void	rb(t_stack **b_start, t_stack **b_finish, int flag)
+void	rb(t_pointers *pntrs, int flag)
 {
-	*b_start = (*b_start)->next;
-	*b_finish = (*b_finish)->next;
+	pntrs->b_first = pntrs->b_first->next;
+	pntrs->b_last = pntrs->b_last->next;
 	if (flag)
 		ft_printf("rb\n");
 }
 
-void	rr(t_stack **a_start, t_stack **a_finish, t_stack **b_start, t_stack **b_finish)
+void	rr(t_pointers *pntrs)
 {
-	ra(a_start, a_finish, 0);
-	rb(b_start, b_finish, 0);
+	ra(pntrs, 0);
+	rb(pntrs, 0);
 	ft_printf("rr\n");
 }

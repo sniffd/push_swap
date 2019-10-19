@@ -6,21 +6,21 @@ t_stack	*create_elem(int n)
 	e->data = n;
 	return (e);
 }
-void	add_last(t_stack **first, t_stack **last, t_stack *e)
+void	add_last(t_pointers *pntrs, t_stack *e)
 {
-	if (!*last)
+	if (!(pntrs->a_last))
 	{
-		*last = e;
-		*first = e;
+		pntrs->a_last = e;
+		pntrs->a_first = e;
 		e->next = e;
 		e->prev = e;
 	}
 	else
 	{
-		e->next = (*first);
-		(*last)->next = e;
-		e->prev = (*last);
-		(*first)->prev = e;
-		(*last) = e;
+		e->next = pntrs->a_first;
+		pntrs->a_last->next = e;
+		e->prev = pntrs->a_last;
+		pntrs->a_first->prev = e;
+		pntrs->a_last = e;
 	}
 }

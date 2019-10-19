@@ -78,7 +78,7 @@ void	print_stack(t_stack *f, t_stack *l)
 	ft_printf("\n");
 }
 
-void	set_op(t_stack *a_first, t_stack *b_first, int size_a, int size_b, int argc, int *ar, t_counters *cntrs)
+void	set_op(t_pointers *pntrs, int argc, int *ar, t_counters *cntrs)
 {
 	int		part;
 	int		i;
@@ -86,7 +86,8 @@ void	set_op(t_stack *a_first, t_stack *b_first, int size_a, int size_b, int argc
 	t_stack	*current;
 	t_stack	*tmp;
 
-	current = b_first;
+	current = pntrs->b_first;
+	part = 0;
 	if (cntrs->t_counter > 0)
 		part = 3;
 	else if (cntrs->s_counter > 0)
@@ -110,10 +111,10 @@ void	set_op(t_stack *a_first, t_stack *b_first, int size_a, int size_b, int argc
 		tmp = current;
 		if (part == current->part)
 		{
-			if ((current->rb = find_steps(b_first, size_b, current->data)) < 0)
+			if ((current->rb = find_steps(pntrs->b_first, cntrs->counter_b, current->data)) < 0)
 			{
 				current->rb = 0;
-				while (tmp != b_first)
+				while (tmp != pntrs->b_first)
 				{
 					(current->rrb)++;
 					tmp = tmp->next;
@@ -129,12 +130,12 @@ void	set_op(t_stack *a_first, t_stack *b_first, int size_a, int size_b, int argc
 					j = 0;
 					break ;
 				}
-				if (is_contain(a_first, size_a, ar[i + j]))
+				if (is_contain(pntrs->a_first, cntrs->counter_a, ar[i + j]))
 					break;
 				j++;
 			}
-			tmp = a_first;
-			if ((current->ra = find_steps(a_first, size_a, ar[i + j])) == -1)
+			tmp = pntrs->a_first;
+			if ((current->ra = find_steps(pntrs->a_first, cntrs->counter_a, ar[i + j])) == -1)
 			{
 				current->ra = 0;
 				while (tmp->data != ar[i + j])
@@ -160,7 +161,7 @@ void	set_op(t_stack *a_first, t_stack *b_first, int size_a, int size_b, int argc
 					current->rrb + current->rrr;
 		}
 		current = current->next;
-		if (current == b_first)
+		if (current == pntrs->b_first)
 			break;
 	}
 }
@@ -174,6 +175,7 @@ t_stack		*get_steps(t_stack *first, t_counters *cntrs)
 
 	current = first;
 	res = current;
+	part = 0;
 	if (cntrs->t_counter > 0)
 		part = 3;
 	else if (cntrs->s_counter > 0)
@@ -195,39 +197,39 @@ t_stack		*get_steps(t_stack *first, t_counters *cntrs)
 	return (res);
 }
 
-void	execute(t_stack **a_first, t_stack **a_last, t_stack **b_first, t_stack **b_last, t_counters *cntrs)
+void	execute(t_pointers *pntrs, t_counters *cntrs)
 {
 	t_stack	*ops;
 
-	ops = get_steps(*b_first, cntrs);
+	ops = get_steps(pntrs->b_first, cntrs);
 	while (ops->rr > 0)
 	{
-		rr(a_first, a_last, b_first, b_last);
+		rr(pntrs);
 		(ops->rr)--;
 	}
 	while (ops->ra > 0)
 	{
-		ra(a_first, a_last, 1);
+		ra(pntrs, 1);
 		(ops->ra)--;
 	}
 	while (ops->rb > 0)
 	{
-		rb(b_first, b_last, 1);
+		rb(pntrs, 1);
 		(ops->rb)--;
 	}
 	while (ops->rrr > 0)
 	{
-		rrr(a_first, a_last, b_first, b_last);
+		rrr(pntrs);
 		(ops->rrr)--;
 	}
 	while (ops->rra > 0)
 	{
-		rra(a_first, a_last, 1);
+		rra(pntrs, 1);
 		(ops->rra)--;
 	}
 	while (ops->rrb > 0)
 	{
-		rrb(b_first, b_last, 1);
+		rrb(pntrs, 1);
 		(ops->rrb)--;
 	}
 	if (ops->part == 3)
@@ -252,32 +254,25 @@ int		is_sort(t_stack *first, t_stack *last)
 	return (1);
 }
 
-void	push_swap(t_stack *first, t_stack *last, int *ar, int argc)
+void	push_swap(t_pointers *pntrs, int *ar, int argc)
 {
 	int steps;
-	int b_steps;
 	int	i;
-	int	j;
 	int	first_index;
 	int	second_index;
-	t_stack		*b_first;
-	t_stack		*b_last;
 	t_stack		*current;
 	t_counters	*cntrs;
 
-	if (is_sort(first, last))
+	if (is_sort(pntrs->a_first, pntrs->a_last))
 		return ;
-	cntrs = ft_memalloc(sizeof(t_counters));
-	b_first = NULL;
-	b_last = NULL;
-	current = first;
+	cntrs = (t_counters *)ft_memalloc(sizeof(t_counters));
+	current = pntrs->a_first;
 	cntrs->f_counter = 0;
 	cntrs->s_counter = 0;
 	cntrs->t_counter = 0;
 	cntrs->counter_b = 0;
 	cntrs->counter_a = argc - 1;
 	i = 0;
-	j = 0;
 	first_index = (argc - 2) / 3;
 	second_index = first_index * 2 + 1;
 	while (1)
@@ -300,36 +295,36 @@ void	push_swap(t_stack *first, t_stack *last, int *ar, int argc)
 			(cntrs->t_counter)++;
 		}
 		i = 0;
-		if (current == last)
+		if (current == pntrs->a_last)
 			break ;
 		current = current->next;
 	}
 	cntrs->tmp = cntrs->f_counter;
 	while (cntrs->tmp)
 	{
-		if (first->part == 1)
+		if (pntrs->a_first->part == 1)
 		{
-			pb(&first, &b_first);
+			pb(pntrs);
 			(cntrs->tmp)--;
 		}
-		else if ((steps = find_elem(first, 1)) > 0)
+		else if ((steps = find_elem(pntrs->a_first, 1)) > 0)
 		{
 			while (steps)
 			{
-				ra(&first, &last, 1);
+				ra(pntrs, 1);
 				steps--;
 			}
-			pb(&first, &b_first);
+			pb(pntrs);
 			(cntrs->tmp)--;
 		}
 		else
 		{
 			while (steps)
 			{
-				rra(&first, &last, 1);
+				rra(pntrs, 1);
 				steps++;
 			}
-			pb(&first, &b_first);
+			pb(pntrs);
 			(cntrs->tmp)--;
 		}
 		(cntrs->counter_a)--;
@@ -338,29 +333,29 @@ void	push_swap(t_stack *first, t_stack *last, int *ar, int argc)
 	cntrs->tmp = cntrs->s_counter;
 	while (cntrs->tmp)
 	{
-		if (first->part == 2)
+		if (pntrs->a_first->part == 2)
 		{
-			pb(&first, &b_first);
+			pb(pntrs);
 			(cntrs->tmp)--;
 		}
-		else if ((steps = find_elem(first, 2)) > 0)
+		else if ((steps = find_elem(pntrs->a_first, 2)) > 0)
 		{
 			while (steps)
 			{
-				ra(&first, &last, 1);
+				ra(pntrs, 1);
 				steps--;
 			}
-			pb(&first, &b_first);
+			pb(pntrs);
 			(cntrs->tmp)--;
 		}
 		else
 		{
 			while (steps)
 			{
-				rra(&first, &last, 1);
+				rra(pntrs, 1);
 				steps++;
 			}
-			pb(&first, &b_first);
+			pb(pntrs);
 			(cntrs->tmp)--;
 		}
 		(cntrs->counter_a)--;
@@ -369,29 +364,29 @@ void	push_swap(t_stack *first, t_stack *last, int *ar, int argc)
 	cntrs->tmp = cntrs->t_counter;
 	while (cntrs->tmp)
 	{
-		if (first->part == 3)
+		if (pntrs->a_first->part == 3)
 		{
-			pb(&first, &b_first);
+			pb(pntrs);
 			(cntrs->tmp)--;
 		}
-		else if ((steps = find_elem(first, 3)) > 0)
+		else if ((steps = find_elem(pntrs->a_first, 3)) > 0)
 		{
 			while (steps)
 			{
-				ra(&first, &last, 1);
+				ra(pntrs, 1);
 				steps--;
 			}
-			pb(&first, &b_first);
+			pb(pntrs);
 			(cntrs->tmp)--;
 		}
 		else
 		{
 			while (steps)
 			{
-				rra(&first, &last, 1);
+				rra(pntrs, 1);
 				steps++;
 			}
-			pb(&first, &b_first);
+			pb(pntrs);
 			(cntrs->tmp)--;
 		}
 		(cntrs->counter_a)--;
@@ -399,25 +394,24 @@ void	push_swap(t_stack *first, t_stack *last, int *ar, int argc)
 	}
 	while (cntrs->counter_b)
 	{
-		set_op(first, b_first, cntrs->counter_a, cntrs->counter_b, argc, ar, cntrs);
-		b_last = b_first->prev;
-		execute(&first, &last, &b_first, &b_last, cntrs);
-		pa(&first, &b_first);
+		set_op(pntrs, argc, ar, cntrs);
+		pntrs->b_last = pntrs->b_first->prev;
+		execute(pntrs, cntrs);
+		pa(pntrs);
 		(cntrs->counter_a)++;
 		(cntrs->counter_b)--;
-//		i++;
 	}
-	if ((steps = find_steps(first, cntrs->counter_a, ar[0])) != 0)
+	if ((steps = find_steps(pntrs->a_first, cntrs->counter_a, ar[0])) != 0)
 	{
 		if (steps < 0)
 		{
-			while (first->data != ar[0])
-				rra(&first, &last, 1);
+			while (pntrs->a_first->data != ar[0])
+				rra(pntrs, 1);
 		}
 		else
 		{
-			while (first->data != ar[0])
-				ra(&first, &last, 1);
+			while (pntrs->a_first->data != ar[0])
+				ra(pntrs, 1);
 		}
 	}
 //	ft_printf("stack a\n");
@@ -454,28 +448,28 @@ int		validation(int argc, char **argv)
 	return (1);
 }
 
-void	create_stack(t_stack **first, t_stack **last, int *ar, int argc)
+void	create_stack(t_pointers *pntrs, int *ar, int argc)
 {
 	int	i;
 
 	i = 1;
 	while (i < argc)
 	{
-		add_last(first, last, create_elem(ar[i - 1]));
+		add_last(pntrs, create_elem(ar[i - 1]));
 		i++;
 	}
 }
 
 int		main(int argc, char **argv)
 {
-	int	*ar;
-	int	i;
-	t_stack *first;
-	t_stack *last;
+	int			*ar;
+	int			i;
+	t_stack 	*first;
+	t_stack		*last;
+	t_pointers	*pntrs;
 
+	pntrs = (t_pointers *)ft_memalloc(sizeof(t_pointers));
 	i = 1;
-	first = NULL;
-	last = NULL;
 	if (validation(argc, argv))
 	{
 		ar = (int *)ft_memalloc(sizeof(int) * (argc - 1));
@@ -484,9 +478,9 @@ int		main(int argc, char **argv)
 			ar[i - 1] = ft_atoi(argv[i]);
 			i++;
 		}
-		create_stack(&first, &last, ar, argc);
+		create_stack(pntrs, ar, argc);
 		ft_qsort(ar, argc - 2);
-		push_swap(first, last, ar, argc);
+		push_swap(pntrs, ar, argc);
 	}
 	else
 		ft_printf("Error\n");

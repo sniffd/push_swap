@@ -1,57 +1,61 @@
 #include "push_swap.h"
 
-void	pa(t_stack **a_start, t_stack **b_start)//TODO сделать обработку случаев пустого стэка и стека из одного элемента;
+void	pa(t_pointers *pntrs)//TODO сделать обработку стека из одного элемента;
 {
-	if (*b_start)
+	if (pntrs->b_first)
 	{
-		if (*a_start)
+		if (pntrs->a_first)
 		{
-			(*a_start)->prev->next = *b_start;
-			(*b_start)->prev->next = (*b_start)->next;
-			(*b_start)->next->prev = (*b_start)->prev;
-			(*b_start)->prev = (*a_start)->prev;
-			*b_start = (*b_start)->next;
-			(*a_start)->prev->next->next = *a_start;
-			(*a_start)->prev = (*a_start)->prev->next;
-			*a_start = (*a_start)->prev;
+			pntrs->a_first->prev->next = pntrs->b_first;
+			(pntrs->b_first)->prev->next = (pntrs->b_first)->next;
+			(pntrs->b_first)->next->prev = (pntrs->b_first)->prev;
+			(pntrs->b_first)->prev = pntrs->a_first->prev;
+			pntrs->b_first = (pntrs->b_first)->next;
+			pntrs->a_first->prev->next->next = pntrs->a_first;
+			pntrs->a_first->prev = pntrs->a_first->prev->next;
+			pntrs->a_first = pntrs->a_first->prev;
 		}
 		else
 		{
-			*a_start = *b_start;
-			*b_start = (*b_start)->next;
-			(*a_start)->prev->next = *b_start;
-			(*b_start)->prev = (*a_start)->prev;
-			(*a_start)->prev = *a_start;
-			(*a_start)->next = *a_start;
+			pntrs->a_first = pntrs->b_first;
+			pntrs->b_first = (pntrs->b_first)->next;
+			pntrs->a_first->prev->next = pntrs->b_first;
+			(pntrs->b_first)->prev = pntrs->a_first->prev;
+			pntrs->a_first->prev = pntrs->a_first;
+			pntrs->a_first->next = pntrs->a_first;
 		}
+		pntrs->a_last = pntrs->a_first->prev;
+		pntrs->b_last = (pntrs->b_first) ? pntrs->b_first->prev : NULL;
+		ft_printf("pa\n");
 	}
-	ft_printf("pa\n");
 }
 
-void	pb(t_stack **a_start, t_stack **b_start)
+void	pb(t_pointers *pntrs)
 {
-	if (*a_start)
+	if (pntrs->a_first)
 	{
-		if (*b_start)
+		if (pntrs->b_first)
 		{
-			(*b_start)->prev->next = *a_start;
-			(*a_start)->prev->next = (*a_start)->next;
-			(*a_start)->next->prev = (*a_start)->prev;
-			(*a_start)->prev = (*b_start)->prev;
-			*a_start = (*a_start)->next;
-			(*b_start)->prev->next->next = *b_start;
-			(*b_start)->prev = (*b_start)->prev->next;
-			*b_start = (*b_start)->prev;
+			pntrs->b_first->prev->next = pntrs->a_first;
+			pntrs->a_first->prev->next = pntrs->a_first->next;
+			pntrs->a_first->next->prev = pntrs->a_first->prev;
+			pntrs->a_first->prev = pntrs->b_first->prev;
+			pntrs->a_first = pntrs->a_first->next;
+			pntrs->b_first->prev->next->next = pntrs->b_first;
+			pntrs->b_first->prev = pntrs->b_first->prev->next;
+			pntrs->b_first = pntrs->b_first->prev;
 		}
 		else
 		{
-			*b_start = *a_start;
-			*a_start = (*a_start)->next;
-			(*b_start)->prev->next = *a_start;
-			(*a_start)->prev = (*b_start)->prev;
-			(*b_start)->prev = *b_start;
-			(*b_start)->next = *b_start;
+			pntrs->b_first = pntrs->a_first;
+			pntrs->a_first = pntrs->a_first->next;
+			pntrs->b_first->prev->next = pntrs->a_first;
+			pntrs->a_first->prev = pntrs->b_first->prev;
+			pntrs->b_first->prev = pntrs->b_first;
+			pntrs->b_first->next = pntrs->b_first;
 		}
+		pntrs->b_last = pntrs->b_first->prev;
+		pntrs->a_last = (pntrs->a_first) ? pntrs->a_first->prev : NULL;
+		ft_printf("pb\n");
 	}
-	ft_printf("pb\n");
 }
