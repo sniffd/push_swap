@@ -116,7 +116,7 @@ void	set_op(t_stack *a_first, t_stack *b_first, int size_a, int size_b, int argc
 				while (tmp != b_first)
 				{
 					(current->rrb)++;
-					tmp = tmp->prev;
+					tmp = tmp->next;
 				}
 			}
 			i = find_pos(ar, current->data);
@@ -165,31 +165,32 @@ void	set_op(t_stack *a_first, t_stack *b_first, int size_a, int size_b, int argc
 	}
 }
 
-t_stack		*get_steps(t_stack *first)
+t_stack		*get_steps(t_stack *first, t_counters *cntrs)
 {
 	int	part;
-//	int	steps;
-//	int	res_steps;
 	int	min;
 	t_stack *current;
 	t_stack *res;
 
 	current = first;
 	res = current;
-	part = current->part;
-//	steps = 0;
-//	res_steps = 0;
-	min = current->sum;
+	if (cntrs->t_counter > 0)
+		part = 3;
+	else if (cntrs->s_counter > 0)
+		part = 2;
+	else if (cntrs->f_counter > 0)
+		part = 1;
+	min = -1;
 	while (1)
 	{
-		if (current->part == part && current->sum < min)
+		if (current->part == part && (current->sum < min || min < 0))
 		{
 			min = current->sum;
 			res = current;
 		}
-		current = current->next;
 		if (current == first->prev)
 			break;
+		current = current->next;
 	}
 	return (res);
 }
@@ -198,7 +199,7 @@ void	execute(t_stack **a_first, t_stack **a_last, t_stack **b_first, t_stack **b
 {
 	t_stack	*ops;
 
-	ops = get_steps(*b_first);
+	ops = get_steps(*b_first, cntrs);
 	while (ops->rr > 0)
 	{
 		rr(a_first, a_last, b_first, b_last);
@@ -419,10 +420,10 @@ void	push_swap(t_stack *first, t_stack *last, int *ar, int argc)
 				ra(&first, &last, 1);
 		}
 	}
-	ft_printf("stack a\n");
-	print_stack(first, first->prev);
-	ft_printf("stack b\n");
-	print_stack(b_first, b_first->prev);
+//	ft_printf("stack a\n");
+//	print_stack(first, first->prev);
+//	ft_printf("stack b\n");
+//	print_stack(b_first, b_first->prev);
 }
 
 int		validation(int argc, char **argv)
@@ -483,17 +484,9 @@ int		main(int argc, char **argv)
 			ar[i - 1] = ft_atoi(argv[i]);
 			i++;
 		}
-//		ft_printf("%i\n%i\n%i\n%i\n%i\n", ar[0], ar[1], ar[2], ar[3], ar[4]);
 		create_stack(&first, &last, ar, argc);
 		ft_qsort(ar, argc - 2);
-//		ft_printf("%i\n%i\n%i\n%i\n%i\n", ar[0], ar[1], ar[2], ar[3], ar[4]);
 		push_swap(first, last, ar, argc);
-//		i = 0;
-//		while (i < argc - 1)
-//		{
-//			ft_printf("%i ", ar[i]);
-//			i++;
-//		}
 	}
 	else
 		ft_printf("Error\n");
