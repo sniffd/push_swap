@@ -293,51 +293,44 @@ void	presort(t_pointers *pntrs, t_counters *cntrs)
 	push_part(pntrs, cntrs, steps, 1);
 }
 
+void	mark_up(t_pointers *pntrs, t_counters *cntrs, const int *ar)
+{
+	t_stack		*current;
+	int			i;
+	int			first_index;
+	int			second_index;
+
+	current = pntrs->a_first;
+	first_index = (cntrs->counter_a - 1) / 3;
+	second_index = first_index * 2 + 1;
+	while (1)
+	{
+		i = 0;
+		while (ar[i] != current->data)
+			i++;
+		if (i <= first_index && i != 0 && (current->part = 1))
+			(cntrs->f_counter)++;
+		else if (i < second_index && i != 0 && (current->part = 2))
+			(cntrs->s_counter)++;
+		else if (i < cntrs->counter_a - 1 && i != 0 && (current->part = 3))
+			(cntrs->t_counter)++;
+		if (current == pntrs->a_last)
+			break ;
+		current = current->next;
+	}
+}
+
 void	push_swap(t_pointers *pntrs, int *ar, int argc)
 {
 	int steps;
 	int	i;
-	int	first_index;
-	int	second_index;
-	t_stack		*current;
 	t_counters	*cntrs;
 
 	if (is_sort(pntrs->a_first, pntrs->a_last))
 		return ;
 	cntrs = (t_counters *)ft_memalloc(sizeof(t_counters));
-	current = pntrs->a_first;
-	cntrs->f_counter = 0;
-	cntrs->s_counter = 0;
-	cntrs->t_counter = 0;
-	cntrs->counter_b = 0;
 	cntrs->counter_a = argc - 1;
-	i = 0;
-	first_index = (argc - 2) / 3;
-	second_index = first_index * 2 + 1;
-	while (1)
-	{
-		while (ar[i] != current->data)
-			i++;
-		if (i <= first_index && i != 0)
-		{
-			current->part = 1;
-			(cntrs->f_counter)++;
-		}
-		else if (i < second_index && i != 0)
-		{
-			current->part = 2;
-			(cntrs->s_counter)++;
-		}
-		else if (i < (argc - 2) && i != 0)
-		{
-			current->part = 3;
-			(cntrs->t_counter)++;
-		}
-		i = 0;
-		if (current == pntrs->a_last)
-			break ;
-		current = current->next;
-	}
+	mark_up(pntrs, cntrs, ar);
 	presort(pntrs, cntrs);
 	while (cntrs->counter_b)
 	{
