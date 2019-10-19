@@ -197,41 +197,26 @@ t_stack		*get_steps(t_stack *first, t_counters *cntrs)
 	return (res);
 }
 
+void	do_op(t_pointers *pntrs, t_stack *current, int *counter, void (fn)(t_pointers *, int))
+{
+		while (*counter > 0)
+		{
+			fn(pntrs, 1);
+			(*counter)--;
+		}
+}
+
 void	execute(t_pointers *pntrs, t_counters *cntrs)
 {
 	t_stack	*ops;
 
 	ops = get_steps(pntrs->b_first, cntrs);
-	while (ops->rr > 0)
-	{
-		rr(pntrs);
-		(ops->rr)--;
-	}
-	while (ops->ra > 0)
-	{
-		ra(pntrs, 1);
-		(ops->ra)--;
-	}
-	while (ops->rb > 0)
-	{
-		rb(pntrs, 1);
-		(ops->rb)--;
-	}
-	while (ops->rrr > 0)
-	{
-		rrr(pntrs);
-		(ops->rrr)--;
-	}
-	while (ops->rra > 0)
-	{
-		rra(pntrs, 1);
-		(ops->rra)--;
-	}
-	while (ops->rrb > 0)
-	{
-		rrb(pntrs, 1);
-		(ops->rrb)--;
-	}
+	do_op(pntrs, ops, &(ops->rr), &rr);
+	do_op(pntrs, ops, &(ops->ra), &ra);
+	do_op(pntrs, ops, &(ops->rb), &rb);
+	do_op(pntrs, ops, &(ops->rrr), &rrr);
+	do_op(pntrs, ops, &(ops->rra), &rra);
+	do_op(pntrs, ops, &(ops->rrb), &rrb);
 	if (ops->part == 3)
 		(cntrs->t_counter)--;
 	else if (ops->part == 2)

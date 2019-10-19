@@ -45,10 +45,10 @@ void	sb(t_stack **b_start);
 void	ss(t_stack **a_start, t_stack **b_start);
 void	ra(t_pointers *pntrs, int flag);
 void	rb(t_pointers *pntrs, int flag);
-void	rr(t_pointers *pntrs);
+void	rr(t_pointers *pntrs, int flag);
 void	rra(t_pointers *pntrs, int flag);
 void	rrb(t_pointers *pntrs, int flag);
-void	rrr(t_pointers *pntrs);
+void	rrr(t_pointers *pntrs, int flag);
 void	pa(t_pointers *pntrs);
 void	pb(t_pointers *pntrs);
 #endif //PUSH_SWAP_PUSH_SWAP_H

@@ -16,9 +16,10 @@ void	rb(t_pointers *pntrs, int flag)
 		ft_printf("rb\n");
 }
 
-void	rr(t_pointers *pntrs)
+void	rr(t_pointers *pntrs, int flag)
 {
 	ra(pntrs, 0);
 	rb(pntrs, 0);
-	ft_printf("rr\n");
+	if (flag)
+		ft_printf("rr\n");
 }
