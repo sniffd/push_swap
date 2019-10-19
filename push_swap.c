@@ -78,6 +78,30 @@ void	print_stack(t_stack *f, t_stack *l)
 	ft_printf("\n");
 }
 
+void	reset(t_stack *current)
+{
+	current->ra = 0;
+	current->rb = 0;
+	current->rr = 0;
+	current->rra = 0;
+	current->rrb = 0;
+	current->rrr = 0;
+	current->sum = 0;
+}
+
+void	set_b(t_stack *current, t_stack *tmp, t_pointers *pntrs, t_counters *cntrs)
+{
+	if ((current->rb = find_steps(pntrs->b_first, cntrs->counter_b, current->data)) < 0)
+	{
+		current->rb = 0;
+		while (tmp != pntrs->b_first)
+		{
+			(current->rrb)++;
+			tmp = tmp->next;
+		}
+	}
+}
+
 void	set_op(t_pointers *pntrs, int argc, int *ar, t_counters *cntrs)
 {
 	int		part;
@@ -100,26 +124,11 @@ void	set_op(t_pointers *pntrs, int argc, int *ar, t_counters *cntrs)
 //		print_stack(a_first, a_first->prev);
 //		ft_printf("stack b\n");
 //		print_stack(b_first, b_first->prev);
-
-		current->ra = 0;
-		current->rb = 0;
-		current->rr = 0;
-		current->rra = 0;
-		current->rrb = 0;
-		current->rrr = 0;
-		current->sum = 0;
+		reset(current);
 		tmp = current;
 		if (part == current->part)
 		{
-			if ((current->rb = find_steps(pntrs->b_first, cntrs->counter_b, current->data)) < 0)
-			{
-				current->rb = 0;
-				while (tmp != pntrs->b_first)
-				{
-					(current->rrb)++;
-					tmp = tmp->next;
-				}
-			}
+			set_b(current, tmp, pntrs, cntrs);
 			i = find_pos(ar, current->data);
 			j = 1;
 			while (1)
@@ -390,8 +399,6 @@ int		main(int argc, char **argv)
 {
 	int			*ar;
 	int			i;
-	t_stack 	*first;
-	t_stack		*last;
 	t_pointers	*pntrs;
 
 	pntrs = (t_pointers *)ft_memalloc(sizeof(t_pointers));
