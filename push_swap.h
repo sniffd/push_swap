@@ -51,4 +51,4 @@ void			rrb(t_pointers *pntrs, int flag);
 void			rrr(t_pointers *pntrs, int flag);
 void			pa(t_pointers *pntrs, int flag);
 void			pb(t_pointers *pntrs, int flag);
-#endif PUSH_SWAP_H
+#endif
