@@ -6,20 +6,27 @@ void	push_swap(t_pointers *pntrs, int *ar, int argc)
 
 	if (is_sort(pntrs->a_first, pntrs->a_last))
 		return ;
-	cntrs = (t_counters *)ft_memalloc(sizeof(t_counters));
+	if (!(cntrs = (t_counters *)ft_memalloc(sizeof(t_counters))))
+		exit(0);
 	cntrs->counter_a = argc - 1;
-	mark_up(pntrs, cntrs, ar);
-	presort(pntrs, cntrs);
-	while (cntrs->counter_b)
+	if (cntrs->counter_a == 5 || cntrs->counter_a == 3)
+		five(pntrs, cntrs, ar);
+	else
 	{
-		set_op(pntrs, ar, cntrs);
-		pntrs->b_last = pntrs->b_first->prev;
-		execute(pntrs, cntrs);
-		pa(pntrs, 1);
-		(cntrs->counter_a)++;
-		(cntrs->counter_b)--;
+		mark_up(pntrs, cntrs, ar);
+		presort(pntrs, cntrs);
+		while (cntrs->counter_b)
+		{
+			set_op(pntrs, ar, cntrs);
+			pntrs->b_last = pntrs->b_first->prev;
+			execute(pntrs, cntrs);
+			pa(pntrs, 1);
+			(cntrs->counter_a)++;
+			(cntrs->counter_b)--;
+		}
+		final_rotation(pntrs, cntrs, ar);
 	}
-	final_rotation(pntrs, cntrs, ar);
+	free(cntrs);
 }
 
 int		validation(int argc, char **argv)
@@ -29,7 +36,8 @@ int		validation(int argc, char **argv)
 	int *ar;
 
 	i = 1;
-	ar = (int *)ft_memalloc(sizeof(int) * (argc - 1));
+	if (!(ar = (int *)ft_memalloc(sizeof(int) * (argc - 1))))
+		exit(0);
 	while (i < argc)
 	{
 		f = 0;
@@ -62,17 +70,48 @@ void	create_stack(t_pointers *pntrs, int *ar, int argc)
 	}
 }
 
+void	free_all(t_pointers *pntrs, int *ar)
+{
+	t_stack *tmp;
+	t_stack *temp;
+
+	free(ar);
+	tmp = pntrs->a_first;
+	if (tmp)
+	{
+		while (tmp != pntrs->a_last && ((temp = tmp->next) || 1))
+		{
+			free(tmp);
+			tmp = temp;
+		}
+		free(tmp);
+	}
+	tmp = pntrs->b_first;
+	if (tmp)
+	{
+		while (tmp != pntrs->b_last && ((temp = tmp->next) || 1))
+		{
+			free(tmp);
+			tmp = temp;
+		}
+		free(tmp);
+	}
+	free(pntrs);
+}
+
 int		main(int argc, char **argv)
 {
 	int			*ar;
 	int			i;
 	t_pointers	*pntrs;
 
-	pntrs = (t_pointers *)ft_memalloc(sizeof(t_pointers));
+	if (!(pntrs = (t_pointers *)ft_memalloc(sizeof(t_pointers))))
+		exit(0);
 	i = 1;
 	if (validation(argc, argv))
 	{
-		ar = (int *)ft_memalloc(sizeof(int) * (argc - 1));
+		if (!(ar = (int *)ft_memalloc(sizeof(int) * (argc - 1))))
+			exit(0);
 		while (i < argc)
 		{
 			ar[i - 1] = ft_atoi(argv[i]);
@@ -81,6 +120,7 @@ int		main(int argc, char **argv)
 		create_stack(pntrs, ar, argc);
 		ft_qsort(ar, argc - 2);
 		push_swap(pntrs, ar, argc);
+		free_all(pntrs, ar);
 	}
 	else
 		ft_printf("Error\n");

@@ -65,4 +65,5 @@ void			final_rotation(t_pointers *pntrs, t_counters *cntrs,
 int				is_sort(t_stack *first, t_stack *last);
 void			execute(t_pointers *pntrs, t_counters *cntrs);
 void			set_op(t_pointers *pntrs, int *ar, t_counters *cntrs);
+void			five(t_pointers *pntrs, t_counters *cntrs, int *ar);
 #endif
