@@ -26,7 +26,7 @@ void	pa_several(t_pointers *pntrs)
 	pntrs->b_last = (pntrs->b_first) ? pntrs->b_first->prev : NULL;
 }
 
-void	pa(t_pointers *pntrs)
+void	pa(t_pointers *pntrs, int flag)
 {
 	if (pntrs->b_first)
 	{
@@ -50,7 +50,8 @@ void	pa(t_pointers *pntrs)
 		}
 		else
 			pa_several(pntrs);
-		ft_printf("pa\n");
+		if (flag)
+			ft_printf("pa\n");
 	}
 }
 
@@ -80,7 +81,7 @@ void	pb_several(t_pointers *pntrs)
 	pntrs->a_last = (pntrs->a_first) ? pntrs->a_first->prev : NULL;
 }
 
-void	pb(t_pointers *pntrs)
+void	pb(t_pointers *pntrs, int flag)
 {
 	if (pntrs->a_first)
 	{
@@ -104,6 +105,7 @@ void	pb(t_pointers *pntrs)
 		}
 		else
 			pb_several(pntrs);
-		ft_printf("pb\n");
+		if (flag)
+			ft_printf("pb\n");
 	}
 }
