@@ -216,11 +216,9 @@ t_stack		*get_steps(t_stack *first, t_counters *cntrs)
 	min = -1;
 	while (1)
 	{
-		if (current->part == part && (current->sum < min || min < 0))
-		{
-			min = current->sum;
+		if (current->part == part && (current->sum < min || min < 0) &&
+		(min = current->sum))
 			res = current;
-		}
 		if (current == first->prev)
 			break ;
 		current = current->next;
@@ -282,18 +280,18 @@ void	push_part(t_pointers *pntrs, t_counters *cntrs, int steps, int part)
 	while ((cntrs->tmp)--)
 	{
 		if (pntrs->a_first->part == part)
-			pb(pntrs);
+			pb(pntrs, 1);
 		else if ((steps = find_elem(pntrs->a_first, part)) > 0)
 		{
 			while (steps--)
 				ra(pntrs, 1);
-			pb(pntrs);
+			pb(pntrs, 1);
 		}
 		else
 		{
 			while (steps++)
 				rra(pntrs, 1);
-			pb(pntrs);
+			pb(pntrs, 1);
 		}
 		(cntrs->counter_a)--;
 		(cntrs->counter_b)++;
@@ -367,15 +365,11 @@ void	push_swap(t_pointers *pntrs, int *ar, int argc)
 		set_op(pntrs, argc, ar, cntrs);
 		pntrs->b_last = pntrs->b_first->prev;
 		execute(pntrs, cntrs);
-		pa(pntrs);
+		pa(pntrs, 1);
 		(cntrs->counter_a)++;
 		(cntrs->counter_b)--;
 	}
 	final_rotation(pntrs, cntrs, ar);
-//	ft_printf("stack a\n");
-//	print_stack(first, first->prev);
-//	ft_printf("stack b\n");
-//	print_stack(b_first, b_first->prev);
 }
 
 int		validation(int argc, char **argv)
