@@ -72,7 +72,7 @@ void	print_stack(t_stack *f, t_stack *l)
 	{
 		ft_printf("%i\n", tmp->data);
 		if (tmp == l)
-			break;
+			break ;
 		tmp = tmp->next;
 	}
 	ft_printf("\n");
@@ -94,7 +94,8 @@ void	set_b(t_pointers *pntrs, t_counters *cntrs)
 	t_stack	*tmp;
 
 	tmp = pntrs->current;
-	if ((pntrs->current->rb = find_steps(pntrs->b_first, cntrs->counter_b, pntrs->current->data)) < 0)
+	if ((pntrs->current->rb =
+		find_steps(pntrs->b_first, cntrs->counter_b, pntrs->current->data)) < 0)
 	{
 		pntrs->current->rb = 0;
 		while (tmp != pntrs->b_first)
@@ -110,7 +111,8 @@ void	set_a(t_pointers *pntrs, t_counters *cntrs, int e)
 	t_stack	*tmp;
 
 	tmp = pntrs->a_first;
-	if ((pntrs->current->ra = find_steps(pntrs->a_first, cntrs->counter_a, e)) == -1)
+	if ((pntrs->current->ra =
+		find_steps(pntrs->a_first, cntrs->counter_a, e)) == -1)
 	{
 		pntrs->current->ra = 0;
 		while (tmp->data != e)
@@ -159,7 +161,7 @@ void	set_sum(t_counters *cntrs, t_pointers *pntrs, int *ar, int part)
 				break ;
 			}
 			if (is_contain(pntrs->a_first, cntrs->counter_a, ar[i + j]))
-				break;
+				break ;
 			j++;
 		}
 		set_a(pntrs, cntrs, ar[i + j]);
@@ -191,16 +193,16 @@ void	set_op(t_pointers *pntrs, int argc, int *ar, t_counters *cntrs)
 		set_sum(cntrs, pntrs, ar, part);
 		pntrs->current = pntrs->current->next;
 		if (pntrs->current == pntrs->b_first)
-			break;
+			break ;
 	}
 }
 
 t_stack		*get_steps(t_stack *first, t_counters *cntrs)
 {
-	int	part;
-	int	min;
-	t_stack *current;
-	t_stack *res;
+	int		part;
+	int		min;
+	t_stack	*current;
+	t_stack	*res;
 
 	current = first;
 	res = current;
@@ -220,19 +222,20 @@ t_stack		*get_steps(t_stack *first, t_counters *cntrs)
 			res = current;
 		}
 		if (current == first->prev)
-			break;
+			break ;
 		current = current->next;
 	}
 	return (res);
 }
 
-void	do_op(t_pointers *pntrs, t_stack *current, int *counter, void (fn)(t_pointers *, int))
+void	do_op(t_pointers *pntrs, t_stack *current, int *counter,
+		void (fn)(t_pointers *, int))
 {
-		while (*counter > 0)
-		{
-			fn(pntrs, 1);
-			(*counter)--;
-		}
+	while (*counter > 0)
+	{
+		fn(pntrs, 1);
+		(*counter)--;
+	}
 }
 
 void	execute(t_pointers *pntrs, t_counters *cntrs)

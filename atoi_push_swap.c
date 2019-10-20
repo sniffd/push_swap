@@ -46,7 +46,7 @@ int			atoi_push_swap(const char *str, int *f)
 
 	sign = 0;
 	while (*str == ' ' || *str == '\t' || *str == '\n' || *str == '\f'
-		   || *str == '\r' || *str == '\v')
+	|| *str == '\r' || *str == '\v')
 		str++;
 	if (*str == '-' || *str == '+')
 	{

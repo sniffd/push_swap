@@ -12,9 +12,9 @@ void get_median(int *ar, int end)
 
 int	partition(int *ar, int end)
 {
-	int pivot;
-	int i;
-	int j;
+	int	pivot;
+	int	i;
+	int	j;
 	int	index;
 
 	get_median(ar, end);
@@ -42,7 +42,7 @@ int	partition(int *ar, int end)
 
 void	ft_qsort(int *ar, int end)
 {
-	int p;
+	int	p;
 
 	if (end > 0)
 	{

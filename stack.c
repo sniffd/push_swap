@@ -2,10 +2,13 @@
 
 t_stack	*create_elem(int n)
 {
-	t_stack	*e = (t_stack *)ft_memalloc(sizeof(t_stack));
+	t_stack *e;
+
+	e = (t_stack *)ft_memalloc(sizeof(t_stack));
 	e->data = n;
 	return (e);
 }
+
 void	add_last(t_pointers *pntrs, t_stack *e)
 {
 	if (!(pntrs->a_last))
