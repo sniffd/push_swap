@@ -51,4 +51,18 @@ void			rrb(t_pointers *pntrs, int flag);
 void			rrr(t_pointers *pntrs, int flag);
 void			pa(t_pointers *pntrs, int flag);
 void			pb(t_pointers *pntrs, int flag);
+int				find_steps(t_stack *first, int size, int n);
+int				is_contain(t_stack *first, int size, int n);
+int				find_pos(const int *ar, int n);
+int				find_elem(t_stack *first, int part);
+void			set_sum(t_counters *cntrs, t_pointers *pntrs, int *ar,
+		int part);
+void			reset(t_stack *current);
+void			mark_up(t_pointers *pntrs, t_counters *cntrs, const int *ar);
+void			presort(t_pointers *pntrs, t_counters *cntrs);
+void			final_rotation(t_pointers *pntrs, t_counters *cntrs,
+		const int *ar);
+int				is_sort(t_stack *first, t_stack *last);
+void			execute(t_pointers *pntrs, t_counters *cntrs);
+void			set_op(t_pointers *pntrs, int *ar, t_counters *cntrs);
 #endif
