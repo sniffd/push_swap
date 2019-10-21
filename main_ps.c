@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main_ps.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: fdaryn-h <fdaryn-h@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/10/21 05:31:20 by fdaryn-h          #+#    #+#             */
+/*   Updated: 2019/10/21 05:31:20 by fdaryn-h         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "push_swap.h"
 
 void	push_swap(t_pointers *pntrs, int *ar, int argc)
@@ -56,18 +68,6 @@ int		validation(int argc, char **argv)
 	}
 	free(ar);
 	return (1);
-}
-
-void	create_stack(t_pointers *pntrs, int *ar, int argc)
-{
-	int	i;
-
-	i = 1;
-	while (i < argc)
-	{
-		add_last(pntrs, create_elem(ar[i - 1]));
-		i++;
-	}
 }
 
 int		main(int argc, char **argv)

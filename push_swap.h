@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   push_swap.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: fdaryn-h <fdaryn-h@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/10/21 05:31:59 by fdaryn-h          #+#    #+#             */
+/*   Updated: 2019/10/21 05:31:59 by fdaryn-h         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PUSH_SWAP_H
 # define PUSH_SWAP_H
 # include "ft_printf.h"
@@ -66,4 +78,6 @@ int				is_sort(t_stack *first, t_stack *last);
 void			execute(t_pointers *pntrs, t_counters *cntrs);
 void			set_op(t_pointers *pntrs, int *ar, t_counters *cntrs);
 void			five(t_pointers *pntrs, t_counters *cntrs, int *ar);
+void			free_all(t_pointers *pntrs, int *ar);
+void			create_stack(t_pointers *pntrs, int *ar, int argc);
 #endif

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   services.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: fdaryn-h <fdaryn-h@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/10/21 05:32:24 by fdaryn-h          #+#    #+#             */
+/*   Updated: 2019/10/21 05:32:24 by fdaryn-h         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "push_swap.h"
 
 void	print_stack(t_stack *f, t_stack *l, int r, int g)
@@ -36,6 +48,18 @@ int		is_sort(t_stack *first, t_stack *last)
 		current = current->next;
 	}
 	return (1);
+}
+
+void	create_stack(t_pointers *pntrs, int *ar, int argc)
+{
+	int	i;
+
+	i = 1;
+	while (i < argc)
+	{
+		add_last(pntrs, create_elem(ar[i - 1]));
+		i++;
+	}
 }
 
 void	free_all(t_pointers *pntrs, int *ar)

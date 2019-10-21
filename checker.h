@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   checker.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: fdaryn-h <fdaryn-h@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/10/21 05:30:38 by fdaryn-h          #+#    #+#             */
+/*   Updated: 2019/10/21 05:30:38 by fdaryn-h         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef CHECKER_H
 # define CHECKER_H
 # include "push_swap.h"
@@ -18,7 +30,10 @@ typedef	struct	s_color
 	int	bg;
 }				t_color;
 
-void	print_stack(t_stack *f, t_stack *l, int r, int g);
-void	free_all(t_pointers *pntrs, int *ar);
+void			print_stack(t_stack *f, t_stack *l, int r, int g);
+void			checker(t_pointers *pntrs, t_flags *flags);
+int				do_operations(char *line, t_pointers *pntrs, t_color *clr);
+void			parse_flags(const char *str, t_flags *flags);
+void			visual(t_flags *flags, t_pointers *pntrs, t_color *clr);
 
 #endif
