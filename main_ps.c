@@ -70,35 +70,6 @@ void	create_stack(t_pointers *pntrs, int *ar, int argc)
 	}
 }
 
-void	free_all(t_pointers *pntrs, int *ar)
-{
-	t_stack *tmp;
-	t_stack *temp;
-
-	free(ar);
-	tmp = pntrs->a_first;
-	if (tmp)
-	{
-		while (tmp != pntrs->a_last && ((temp = tmp->next) || 1))
-		{
-			free(tmp);
-			tmp = temp;
-		}
-		free(tmp);
-	}
-	tmp = pntrs->b_first;
-	if (tmp)
-	{
-		while (tmp != pntrs->b_last && ((temp = tmp->next) || 1))
-		{
-			free(tmp);
-			tmp = temp;
-		}
-		free(tmp);
-	}
-	free(pntrs);
-}
-
 int		main(int argc, char **argv)
 {
 	int			*ar;
@@ -123,6 +94,6 @@ int		main(int argc, char **argv)
 		free_all(pntrs, ar);
 	}
 	else
-		ft_printf("Error\n");
+		write(2, "Error\n", 6);
 	return (0);
 }

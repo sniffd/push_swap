@@ -2,18 +2,24 @@
 
 void	rra(t_pointers *pntrs, int flag)
 {
-	pntrs->a_first = pntrs->a_first->prev;
-	pntrs->a_last = pntrs->a_last->prev;
-	if (flag)
-		ft_printf("rra\n");
+	if (pntrs->a_first)
+	{
+		pntrs->a_first = pntrs->a_first->prev;
+		pntrs->a_last = pntrs->a_last->prev;
+		if (flag)
+			ft_printf("rra\n");
+	}
 }
 
 void	rrb(t_pointers *pntrs, int flag)
 {
-	pntrs->b_first = pntrs->b_first->prev;
-	pntrs->b_last = pntrs->b_last->prev;
-	if (flag)
-		ft_printf("rrb\n");
+	if (pntrs->b_first)
+	{
+		pntrs->b_first = pntrs->b_first->prev;
+		pntrs->b_last = pntrs->b_last->prev;
+		if (flag)
+			ft_printf("rrb\n");
+	}
 }
 
 void	rrr(t_pointers *pntrs, int flag)

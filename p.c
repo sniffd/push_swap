@@ -34,7 +34,7 @@ void	pa(t_pointers *pntrs, int flag)
 		{
 			if (pntrs->a_first)
 			{
-				pntrs->a_last->next = pntrs->a_first;
+				pntrs->a_last->next = pntrs->b_first;
 				pntrs->b_first->next = pntrs->a_first;
 				pntrs->a_first->prev = pntrs->b_first;
 				pntrs->b_first->prev = pntrs->a_last;
@@ -89,7 +89,7 @@ void	pb(t_pointers *pntrs, int flag)
 		{
 			if (pntrs->b_first)
 			{
-				pntrs->b_last->next = pntrs->b_first;
+				pntrs->b_last->next = pntrs->a_first;
 				pntrs->a_first->next = pntrs->b_first;
 				pntrs->b_first->prev = pntrs->a_first;
 				pntrs->a_first->prev = pntrs->b_last;

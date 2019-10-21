@@ -2,7 +2,7 @@
 
 static int	pres(const char *str, int *f)
 {
-	long long	res;
+	int	res;
 
 	res = 0;
 	while (*str >= '0' && *str <= '9')
@@ -17,12 +17,12 @@ static int	pres(const char *str, int *f)
 	}
 	if (*str)
 		*f = 1;
-	return ((int)res);
+	return (res);
 }
 
 static int	mres(const char *str, int *f)
 {
-	long long	res;
+	int	res;
 
 	res = 0;
 	while (*str >= '0' && *str <= '9')
@@ -37,7 +37,7 @@ static int	mres(const char *str, int *f)
 	}
 	if (*str)
 		*f = 1;
-	return ((int)-res);
+	return (-res);
 }
 
 int			atoi_push_swap(const char *str, int *f)
