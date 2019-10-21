@@ -6,7 +6,7 @@
 /*   By: fdaryn-h <fdaryn-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/21 05:31:12 by fdaryn-h          #+#    #+#             */
-/*   Updated: 2019/10/21 05:31:12 by fdaryn-h         ###   ########.fr       */
+/*   Updated: 2019/10/21 21:08:37 by fdaryn-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,14 +86,14 @@ int		main(int c, char **v)
 	i = 1;
 	if (c == 1 || !(flag = (t_flags *)ft_memalloc(sizeof(t_flags))))
 		exit(0);
-	while (c > 1 && v[i][0] == '-' && v[i][1] != '\0' && !ft_isdigit(v[i][1]))
+	while (c > i && v[i][0] == '-' && v[i][1] != '\0' && !ft_isdigit(v[i][1]))
 		parse_flags(v[i++], flag);
 	flag->flags = i ? i - 1 : 0;
-	if (!(pntrs = (t_pointers *)ft_memalloc(sizeof(t_pointers))))
-		exit(0);
 	i = -1;
 	if (validation(c - flag->flags, v + flag->flags))
 	{
+		if (!(pntrs = (t_pointers *)ft_memalloc(sizeof(t_pointers))))
+			exit(0);
 		if (!(ar = (int *)ft_memalloc(sizeof(int) * (c - flag->flags - 1))))
 			exit(0);
 		while (flag->flags + ++i < c - 1)

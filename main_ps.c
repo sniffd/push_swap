@@ -6,7 +6,7 @@
 /*   By: fdaryn-h <fdaryn-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/21 05:31:20 by fdaryn-h          #+#    #+#             */
-/*   Updated: 2019/10/21 05:31:20 by fdaryn-h         ###   ########.fr       */
+/*   Updated: 2019/10/21 20:52:36 by fdaryn-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,12 @@ void	push_swap(t_pointers *pntrs, int *ar, int argc)
 	free(cntrs);
 }
 
+int		free_ar(void *ar)
+{
+	free(ar);
+	return (0);
+}
+
 int		validation(int argc, char **argv)
 {
 	int	i;
@@ -55,7 +61,7 @@ int		validation(int argc, char **argv)
 		f = 0;
 		ar[i - 1] = atoi_push_swap(argv[i], &f);
 		if (f)
-			return (0);
+			return (free_ar(ar));
 		i++;
 	}
 	ft_qsort(ar, argc - 2);
@@ -63,7 +69,7 @@ int		validation(int argc, char **argv)
 	while (i < argc - 2)
 	{
 		if (ar[i] == ar[i + 1])
-			return (0);
+			return (free_ar(ar));
 		i++;
 	}
 	free(ar);
@@ -76,11 +82,11 @@ int		main(int argc, char **argv)
 	int			i;
 	t_pointers	*pntrs;
 
-	if (!(pntrs = (t_pointers *)ft_memalloc(sizeof(t_pointers))))
-		exit(0);
 	i = 1;
 	if (validation(argc, argv))
 	{
+		if (!(pntrs = (t_pointers *)ft_memalloc(sizeof(t_pointers))))
+			exit(0);
 		if (!(ar = (int *)ft_memalloc(sizeof(int) * (argc - 1))))
 			exit(0);
 		while (i < argc)
