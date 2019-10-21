@@ -14,16 +14,22 @@
 
 void	sa(t_pointers *pntrs, int flag)
 {
-	ft_swap(&(pntrs->a_first->data), &(pntrs->a_first->next->data));
-	if (flag)
-		ft_printf("sa\n");
+	if (pntrs->a_first)
+	{
+		ft_swap(&(pntrs->a_first->data), &(pntrs->a_first->next->data));
+		if (flag)
+			ft_printf("sa\n");
+	}
 }
 
 void	sb(t_pointers *pntrs, int flag)
 {
-	ft_swap(&(pntrs->b_first->data), &(pntrs->b_first->next->data));
-	if (flag)
-		ft_printf("sb\n");
+	if (pntrs->b_first)
+	{
+		ft_swap(&(pntrs->b_first->data), &(pntrs->b_first->next->data));
+		if (flag)
+			ft_printf("sb\n");
+	}
 }
 
 void	ss(t_pointers *pntrs, int flag)
