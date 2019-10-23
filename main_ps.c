@@ -6,7 +6,7 @@
 /*   By: fdaryn-h <fdaryn-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/21 05:31:20 by fdaryn-h          #+#    #+#             */
-/*   Updated: 2019/10/21 20:52:36 by fdaryn-h         ###   ########.fr       */
+/*   Updated: 2019/10/23 20:17:37 by fdaryn-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	push_swap(t_pointers *pntrs, int *ar, int argc)
 		return ;
 	if (!(cntrs = (t_counters *)ft_memalloc(sizeof(t_counters))))
 		exit(0);
-	cntrs->counter_a = argc - 1;
+	cntrs->counter_a = argc;
 	if (cntrs->counter_a == 5 || cntrs->counter_a == 3)
 		five(pntrs, cntrs, ar);
 	else
@@ -49,54 +49,84 @@ int		free_ar(void *ar)
 
 int		validation(int argc, char **argv)
 {
-	int	i;
-	int	f;
-	int *ar;
+	int		i;
+	int		j;
+	int		f;
+	int		*ar;
+	int		ac;
+	char	*tmp;
 
 	i = 1;
-	if (!(ar = (int *)ft_memalloc(sizeof(int) * (argc - 1))))
+	j = 0;
+	ac = count_args(argc, argv);
+	if (!(ar = (int *)ft_memalloc(sizeof(int) * ac)))
 		exit(0);
 	while (i < argc)
 	{
 		f = 0;
-		ar[i - 1] = atoi_push_swap(argv[i], &f);
-		if (f)
-			return (free_ar(ar));
+		tmp = argv[i];
+		while (tmp)
+		{
+			ar[j] = atoi_push_swap(&tmp, &f);
+			if (*tmp == ' ')
+			{
+				tmp++;
+				if (*tmp == '\0')
+					return (free_ar(ar));
+			}
+			else if (*tmp == '\0')
+			{
+				j++;
+				break ;
+			}
+			else if (!ft_isdigit(*tmp) || f)
+				return (free_ar(ar));
+			j++;
+		}
 		i++;
 	}
-	ft_qsort(ar, argc - 2);
+	ft_qsort(ar, ac - 1);
 	i = 0;
-	while (i < argc - 2)
+	while (i < ac - 1)
 	{
 		if (ar[i] == ar[i + 1])
 			return (free_ar(ar));
 		i++;
 	}
 	free(ar);
-	return (1);
+	return (ac);
 }
 
 int		main(int argc, char **argv)
 {
 	int			*ar;
 	int			i;
+	int			j;
+	int			ac;
 	t_pointers	*pntrs;
 
 	i = 1;
-	if (validation(argc, argv))
+	j = 0;
+	if ((ac = validation(argc, argv)))
 	{
 		if (!(pntrs = (t_pointers *)ft_memalloc(sizeof(t_pointers))))
 			exit(0);
-		if (!(ar = (int *)ft_memalloc(sizeof(int) * (argc - 1))))
+		if (!(ar = (int *)ft_memalloc(sizeof(int) * ac)))
 			exit(0);
 		while (i < argc)
 		{
-			ar[i - 1] = ft_atoi(argv[i]);
+			while (*(argv[i]))
+			{
+				ar[j] = atoi_push_swap(&(argv[i]), NULL);
+				if (*(argv[i]) == ' ')
+					(argv[i])++;
+				j++;
+			}
 			i++;
 		}
-		create_stack(pntrs, ar, argc);
-		ft_qsort(ar, argc - 2);
-		push_swap(pntrs, ar, argc);
+		create_stack(pntrs, ar, ac);
+		ft_qsort(ar, ac - 1);
+		push_swap(pntrs, ar, ac);
 		free_all(pntrs, ar);
 	}
 	else

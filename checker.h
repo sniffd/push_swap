@@ -20,6 +20,7 @@ typedef	struct	s_flags
 	int	c;
 	int	v;
 	int flags;
+	int	ac;
 }				t_flags;
 
 typedef	struct	s_color
@@ -35,5 +36,6 @@ void			checker(t_pointers *pntrs, t_flags *flags);
 int				do_operations(char *line, t_pointers *pntrs, t_color *clr);
 void			parse_flags(const char *str, t_flags *flags);
 void			visual(t_flags *flags, t_pointers *pntrs, t_color *clr);
+void			skip_flag(char **str);
 
 #endif

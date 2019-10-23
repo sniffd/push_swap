@@ -6,7 +6,7 @@
 /*   By: fdaryn-h <fdaryn-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/21 05:31:59 by fdaryn-h          #+#    #+#             */
-/*   Updated: 2019/10/21 05:31:59 by fdaryn-h         ###   ########.fr       */
+/*   Updated: 2019/10/23 19:03:43 by fdaryn-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ typedef	struct	s_pointers
 }				t_pointers;
 
 void			ft_qsort(int *ar, int end);
-int				atoi_push_swap(const char *str, int *f);
+int				atoi_push_swap(char **str, int *f);
 void			add_last(t_pointers *pntrs, t_stack *e);
 t_stack			*create_elem(int n);
 void			sa(t_pointers *pntrs, int flag);
@@ -80,4 +80,5 @@ void			set_op(t_pointers *pntrs, int *ar, t_counters *cntrs);
 void			five(t_pointers *pntrs, t_counters *cntrs, int *ar);
 void			free_all(t_pointers *pntrs, int *ar);
 void			create_stack(t_pointers *pntrs, int *ar, int argc);
+int				count_args(int argc, char **argv);
 #endif

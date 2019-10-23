@@ -6,7 +6,7 @@
 /*   By: fdaryn-h <fdaryn-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/21 05:32:24 by fdaryn-h          #+#    #+#             */
-/*   Updated: 2019/10/21 05:32:24 by fdaryn-h         ###   ########.fr       */
+/*   Updated: 2019/10/23 19:39:17 by fdaryn-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,12 +54,52 @@ void	create_stack(t_pointers *pntrs, int *ar, int argc)
 {
 	int	i;
 
+	i = 0;
+	while (i < argc)
+	{
+		add_last(pntrs, create_elem(ar[i]));
+		i++;
+	}
+}
+
+void	skip_flag(char **str)
+{
+	if (**str == '-' && ft_isalpha((*str)[1]))
+		(*str)++;
+	while (ft_isalpha(**str))
+		(*str)++;
+	if (**str == ' ' && ((*str)[1]))
+		(*str)++;
+}
+
+int		count_args(int argc, char **argv)
+{
+	char	*tmp;
+	int		i;
+	int		res;
+
+	res = 1;
 	i = 1;
 	while (i < argc)
 	{
-		add_last(pntrs, create_elem(ar[i - 1]));
+		tmp = argv[i];
+		if (*tmp == ' ')
+			return (0);
+		if (*tmp == '\0')
+			res--;
+		while (*tmp && (ft_isdigit(*tmp) || *tmp == ' ' || *tmp == '-' || *tmp == '+'))
+		{
+			if (*tmp == ' ')
+				res++;
+			tmp++;
+		}
+		if (*tmp)
+			return (0);
 		i++;
+		res++;
 	}
+	res--;
+	return (res);
 }
 
 void	free_all(t_pointers *pntrs, int *ar)
