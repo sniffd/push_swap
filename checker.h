@@ -6,7 +6,7 @@
 /*   By: fdaryn-h <fdaryn-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/21 05:30:38 by fdaryn-h          #+#    #+#             */
-/*   Updated: 2019/10/21 05:30:38 by fdaryn-h         ###   ########.fr       */
+/*   Updated: 2019/10/23 23:57:41 by fdaryn-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,5 +37,7 @@ int				do_operations(char *line, t_pointers *pntrs, t_color *clr);
 void			parse_flags(const char *str, t_flags *flags);
 void			visual(t_flags *flags, t_pointers *pntrs, t_color *clr);
 void			skip_flag(char **str);
+void			allocs(t_pointers **pntrs, int **ar, t_flags *flag);
+void			main_help(t_pointers *pntrs, t_flags *flag, int *ar, int c);
 
 #endif

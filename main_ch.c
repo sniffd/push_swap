@@ -6,59 +6,51 @@
 /*   By: fdaryn-h <fdaryn-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/21 05:31:12 by fdaryn-h          #+#    #+#             */
-/*   Updated: 2019/10/23 19:50:14 by fdaryn-h         ###   ########.fr       */
+/*   Updated: 2019/10/24 00:03:06 by fdaryn-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "checker.h"
 
-int		free_ar(void *ar)
+int		parse_cycle(char *tmp, int *ar, int *j, int *f)
 {
-	free(ar);
-	return (0);
+	while (tmp)
+	{
+		if (*tmp == '\0')
+			break ;
+		ar[*j] = atoi_push_swap(&tmp, f);
+		if (*tmp == ' ' && !*f)
+		{
+			tmp++;
+			if (*tmp == '\0')
+				return (free_ar(ar));
+		}
+		else if (*tmp == '\0' && !*f && ((*j)++ || 1))
+			break ;
+		else if (!ft_isdigit(*tmp) || *f)
+			return (free_ar(ar));
+		(*j)++;
+	}
+	return (1);
 }
 
-int		validation(int argc, char **argv)
+int		validation(int argc, char **argv, int ac)
 {
 	int		i;
 	int		j;
 	int		f;
 	int		*ar;
-	int		ac;
-	char	*tmp;
 
-	i = 1;
+	i = 0;
 	j = 0;
 	skip_flag(&(argv[1]));
 	ac = count_args(argc, argv);
 	if (!(ar = (int *)ft_memalloc(sizeof(int) * ac)))
 		exit(0);
-	while (i < argc)
-	{
-		f = 0;
-		tmp = argv[i];
-		while (tmp)
-		{
-			if (*tmp == '\0')
-				break ;
-			ar[j] = atoi_push_swap(&tmp, &f);
-			if (*tmp == ' ')
-			{
-				tmp++;
-				if (*tmp == '\0')
-					return (free_ar(ar));
-			}
-			else if (*tmp == '\0')
-			{
-				j++;
-				break ;
-			}
-			else if (!ft_isdigit(*tmp) || f)
-				return (free_ar(ar));
-			j++;
-		}
-		i++;
-	}
+	f = 0;
+	while (++i < argc)
+		if (!parse_cycle(argv[i], ar, &j, &f))
+			return (0);
 	ft_qsort(ar, ac - 1);
 	i = 0;
 	while (i < ac - 1)
@@ -97,13 +89,15 @@ void	checker(t_pointers *pntrs, t_flags *flags)
 		ft_printf("KO\n");
 }
 
-void	main_help(t_pointers *pntrs, t_flags *flag, int *ar, int c)
+void	set_ar(int i, char **v, int *j, int *ar)
 {
-	create_stack(pntrs, ar, c);
-	ft_qsort(ar, c - 1);
-	checker(pntrs, flag);
-	free_all(pntrs, ar);
-	free(flag);
+	while (v[i + 1] && *(v[i + 1]))
+	{
+		ar[*j] = atoi_push_swap(&(v[i + 1]), NULL);
+		if ((*(v[i + 1])) == ' ')
+			(v[i + 1])++;
+		(*j)++;
+	}
 }
 
 int		main(int c, char **v)
@@ -122,20 +116,11 @@ int		main(int c, char **v)
 		parse_flags(v[i++], flag);
 	skip_flag(&(v[1]));
 	i = -1;
-	if ((flag->ac = validation(c, v)))
+	if ((flag->ac = validation(c, v, 0)))
 	{
-		if (!(pntrs = (t_pointers *)ft_memalloc(sizeof(t_pointers))))
-			exit(0);
-		if (!(ar = (int *)ft_memalloc(sizeof(int) * (flag->ac))))
-			exit(0);
+		allocs(&pntrs, &ar, flag);
 		while (++i < c - 1)
-			while (v[i + 1] && *(v[i + 1]))
-			{
-				ar[j] = atoi_push_swap(&(v[i + 1]), NULL);
-				if ((*(v[i + 1])) == ' ')
-					(v[i + 1])++;
-				j++;
-			}
+			set_ar(i, v, &j, ar);
 		main_help(pntrs, flag, ar, flag->ac);
 	}
 	else

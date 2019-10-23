@@ -60,6 +60,11 @@ int			atoi_push_swap(char **str, int *f)
 		if (**str == '-')
 			sign = 1;
 		(*str)++;
+		if (**str == '-' || **str == '+' || **str == ' ' || **str == '\0')
+		{
+			*f = 1;
+			return (0);
+		}
 	}
 	if (sign)
 		return (mres(str, f));

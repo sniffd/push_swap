@@ -81,4 +81,5 @@ void			five(t_pointers *pntrs, t_counters *cntrs, int *ar);
 void			free_all(t_pointers *pntrs, int *ar);
 void			create_stack(t_pointers *pntrs, int *ar, int argc);
 int				count_args(int argc, char **argv);
+int				free_ar(void *ar);
 #endif

@@ -6,7 +6,7 @@
 /*   By: fdaryn-h <fdaryn-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/21 05:32:24 by fdaryn-h          #+#    #+#             */
-/*   Updated: 2019/10/23 19:39:17 by fdaryn-h         ###   ########.fr       */
+/*   Updated: 2019/10/23 23:52:36 by fdaryn-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ void	print_stack(t_stack *f, t_stack *l, int r, int g)
 				break ;
 			tmp = tmp->next;
 		}
-		ft_printf("\n");
 	}
+	ft_printf("\n");
 }
 
 int		is_sort(t_stack *first, t_stack *last)
@@ -62,19 +62,9 @@ void	create_stack(t_pointers *pntrs, int *ar, int argc)
 	}
 }
 
-void	skip_flag(char **str)
-{
-	if (**str == '-' && ft_isalpha((*str)[1]))
-		(*str)++;
-	while (ft_isalpha(**str))
-		(*str)++;
-	if (**str == ' ' && ((*str)[1]))
-		(*str)++;
-}
-
 int		count_args(int argc, char **argv)
 {
-	char	*tmp;
+	char	*t;
 	int		i;
 	int		res;
 
@@ -82,18 +72,15 @@ int		count_args(int argc, char **argv)
 	i = 1;
 	while (i < argc)
 	{
-		tmp = argv[i];
-		if (*tmp == ' ')
+		t = argv[i];
+		if (*t == ' ')
 			return (0);
-		if (*tmp == '\0')
+		if (*t == '\0')
 			res--;
-		while (*tmp && (ft_isdigit(*tmp) || *tmp == ' ' || *tmp == '-' || *tmp == '+'))
-		{
-			if (*tmp == ' ')
+		while (*t && (ft_isdigit(*t) || *t == ' ' || *t == '-' || *t == '+'))
+			if ((t++ || 1) && *t == ' ')
 				res++;
-			tmp++;
-		}
-		if (*tmp)
+		if (*t)
 			return (0);
 		i++;
 		res++;

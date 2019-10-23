@@ -6,7 +6,7 @@
 /*   By: fdaryn-h <fdaryn-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/21 05:32:47 by fdaryn-h          #+#    #+#             */
-/*   Updated: 2019/10/21 05:32:47 by fdaryn-h         ###   ########.fr       */
+/*   Updated: 2019/10/24 00:15:06 by fdaryn-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,4 +39,14 @@ void	visual(t_flags *flags, t_pointers *pntrs, t_color *clr)
 		else
 			print_stack(pntrs->b_first, pntrs->b_last, 0, 0);
 	}
+}
+
+void	skip_flag(char **str)
+{
+	if (**str == '-' && ft_isalpha((*str)[1]))
+		(*str)++;
+	while (ft_isalpha(**str))
+		(*str)++;
+	if (**str == ' ' && ((*str)[1]))
+		(*str)++;
 }
